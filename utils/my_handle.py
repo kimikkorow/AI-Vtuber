@@ -978,7 +978,7 @@ class My_handle(metaclass=SingletonMeta):
                 if My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "enable") and \
                     "comment_reply" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "type") and \
                     "消息产生时" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "trigger_position"):
-                    asyncio.run(send_msg_to_live_comment_assistant(My_handle.config.get("luoxi_project", "Live_Comment_Assistant"), content))
+                    asyncio.run(send_msg_to_live_comment_assistant(My_handle.config.get("luoxi_project", "Live_Comment_Assistant"), resp_content))
 
                 # 是否启用了周期性触发功能，启用此功能后，数据会被缓存，之后周期到了才会触发
                 if My_handle.config.get("local_qa", "periodic_trigger", "enable"):
