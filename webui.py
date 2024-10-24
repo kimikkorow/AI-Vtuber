@@ -7357,6 +7357,9 @@ def goto_func_page():
         logger.info("自动运行 已启用")
         run_external_program(type="api")
 
+# 发送心跳包
+ui.timer(9 * 60, lambda: common.send_heartbeat())
+
 # 是否启用登录功能（暂不合理）
 if config.get("login", "enable"):
 
