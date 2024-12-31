@@ -240,6 +240,21 @@ def start_server():
                     logger.error(f"调用LLM失败！{e}")
                     return CommonResult(code=-1, message=f"调用LLM失败！{e}")
 
+            from starlette.requests import Request
+
+            @app.post('/tts')
+            async def tts(request: Request):
+                try:
+                    data_json = await request.json()
+                    logger.info(f"API收到数据：{data_json}")
+
+                    resp_json = await My_handle.audio.tts_handle(data_json)
+
+                    return {"code": 200, "message": "成功", "data": resp_json}
+                except Exception as e:
+                    logger.error(traceback.format_exc())
+                    return CommonResult(code=-1, message=f"失败！{e}")
+                
             @app.post("/callback")
             async def callback(msg: CallbackMessage):
                 global my_handle, config, global_idle_time, wait_play_audio_num, wait_synthesis_msg_num
@@ -300,7 +315,15 @@ def start_server():
             
 
             logger.info("HTTP API线程已启动！")
+
+            # 将本地目录中的静态文件（如 CSS、JavaScript、图片等）暴露给 web 服务器，以便用户可以通过特定的 URL 访问这些文件。
+            if config.get("webui", "local_dir_to_endpoint", "enable"):
+                for tmp in config.get("webui", "local_dir_to_endpoint", "config"):
+                    from fastapi.staticfiles import StaticFiles
+                    app.mount(tmp['url_path'], StaticFiles(directory=tmp['local_dir']), name=tmp['local_dir'])
+                    
             uvicorn.run(app, host="0.0.0.0", port=config.get("api_port"))
+            #uvicorn.run(app, host="0.0.0.0", port=config.get("api_port"), ssl_certfile="F:\\FunASR_WS\\cert.pem", ssl_keyfile="F:\\FunASR_WS\\key.pem")
 
         # HTTP API线程并启动
         inside_http_api_thread = threading.Thread(target=http_api_thread)
