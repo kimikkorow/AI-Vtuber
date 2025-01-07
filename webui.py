@@ -2500,6 +2500,7 @@ def goto_func_page():
                         "api_key": (input_dify_api_key, 'str'),
                         "type": (select_dify_type, 'str'),
                         "history_enable": (switch_dify_history_enable, 'bool'),
+                        "custom_params": (textarea_dify_custom_params, 'str'),  
                     }
                 if config.get("webui", "show_card", "llm", "gpt4free"):
                     config_mapping["gpt4free"] = {
@@ -5357,11 +5358,15 @@ def goto_func_page():
                         input_dify_api_key = ui.input(label='API密钥', value=config.get("dify", "api_key"), placeholder='API密钥，API页面获取').tooltip('API密钥，API页面获取')
                         select_dify_type = ui.select(
                             label='应用类型', 
-                            options={'聊天助手': '聊天助手'}, 
+                            options={'聊天助手': '聊天助手', '工作流': '工作流'}, 
                             value=config.get("dify", "type")
                         ).style("width:200px")
                         switch_dify_history_enable = ui.switch('上下文记忆', value=config.get("dify", "history_enable")).style(switch_internal_css)
-            
+                        textarea_dify_custom_params = ui.textarea(
+                            label=f"工作流自定义参数（JSON）", 
+                            value=config.get("dify", "custom_params"), 
+                            placeholder='inputs传递的参数，注意JSON格式',
+                        ).style("width:200px;").tooltip('发送HTTP请求的API链接')
             if config.get("webui", "show_card", "llm", "volcengine"):
                 with ui.card().style(card_css):
                     ui.label("火山引擎")
