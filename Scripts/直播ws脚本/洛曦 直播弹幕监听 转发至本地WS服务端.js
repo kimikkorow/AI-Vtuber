@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         洛曦 直播弹幕监听 转发至本地WS服务端
 // @namespace    http://tampermonkey.net/
-// @version      0.14
+// @version      0.16
 // @description  观察指定 DOM 节点的变化以将数据发送到连接的WebSocket服务端
 // @description  Github：https://github.com/Ikaros-521/AI-Vtuber/tree/main/Scripts/%E7%9B%B4%E6%92%ADws%E8%84%9A%E6%9C%AC
 // @author       Ikaros
@@ -23,6 +23,45 @@
 (function () {
     "use strict";
 
+    // 在文件开头添加一个函数，用于创建和显示消息框
+    function showMessage(message, type = 'info') {
+        const messageBox = document.createElement('div');
+        messageBox.className = `message-box ${type}`;
+        messageBox.innerText = message;
+
+        // 设置样式，消息上方居中
+        messageBox.style.position = 'fixed';
+        messageBox.style.right = '40%';
+        messageBox.style.transform = 'translateX(-50%)';
+        messageBox.style.top = `${10 + (document.querySelectorAll('.message-box').length * 60)}px`; // 每个消息框之间的间距
+        messageBox.style.zIndex = '9999';
+        messageBox.style.padding = '10px';
+        // 设置info、success、error、warning等多个颜色，要好看，参考element-ui
+        messageBox.style.backgroundColor = type === 'info' ? '#409EFF' : type === 'success' ? '#67C23A' : type === 'warning' ? '#E6A23C' : '#F56C6C';
+        messageBox.style.color = 'white';
+        messageBox.style.borderRadius = '5px';
+        messageBox.style.marginBottom = '10px';
+        messageBox.style.transition = 'opacity 0.5s ease';
+        // 字体要大
+        messageBox.style.fontSize = '16px';
+
+        document.body.appendChild(messageBox);
+
+        // 自动消失
+        setTimeout(() => {
+            messageBox.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(messageBox);
+            }, 500);
+        }, 3000); // 3秒后消失
+
+        // 限制消息框数量
+        const messageBoxes = document.querySelectorAll('.message-box');
+        if (messageBoxes.length > 5) { // 限制最多显示5个消息框
+            document.body.removeChild(messageBoxes[0]);
+        }
+    }
+
     setTimeout(function () {
         let my_socket = null;
         let wsUrl = "ws://127.0.0.1:5001";
@@ -33,24 +72,31 @@
 
         if (hostname === "www.douyu.com") {
             console.log("当前直播平台：斗鱼");
+            showMessage("当前直播平台：斗鱼");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "live.kuaishou.com") {
             console.log("当前直播平台：快手");
+            showMessage("当前直播平台：快手");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "mobile.yangkeduo.com") {
             console.log("当前直播平台：拼多多");
+            showMessage("当前直播平台：拼多多");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "live.1688.com") {
             console.log("当前直播平台：1688");
+            showMessage("当前直播平台：1688");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "tbzb.taobao.com") {
             console.log("当前直播平台：淘宝");
+            showMessage("当前直播平台：淘宝");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "redlive.xiaohongshu.com") {
             console.log("当前直播平台：小红书");
+            showMessage("当前直播平台：小红书");
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "channels.weixin.qq.com") {
             console.log("当前直播平台：微信视频号");
+            showMessage("当前直播平台：微信视频号");
             wsUrl = "ws://127.0.0.1:5001";
         }
 
@@ -74,12 +120,13 @@
             // 当收到消息时触发
             my_socket.addEventListener("message", (event) => {
                 console.log("收到服务器数据:", event.data);
+                showMessage("收到服务器数据: " + event.data);
             });
 
             // 当连接关闭时触发
             my_socket.addEventListener("close", (event) => {
                 console.log("WS连接关闭");
-
+                showMessage("WS连接关闭", 'error');
                 // 重连
                 setTimeout(() => {
                     connectWebSocket();
@@ -125,6 +172,8 @@
                                 }
 
                                 console.log(username + ":" + content);
+                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
 
                                 // 获取到弹幕数据
                                 if (username != "" && content != "") {
@@ -153,77 +202,98 @@
                     // 这里处理新增的DOM元素
                     if (mutation.type === "childList") {
                         mutation.addedNodes.forEach((node) => {
-                            // 判断是否是新增的弹幕消息
-                            if (node.classList.contains("wrapper") || node.classList.contains("item")) {
-                                // 新增的动态DOM元素处理
-                                console.log("Added node:", node);
+                            // 判断是否是新增的消息节点
+                            if (node.querySelector(".comment-cell")) {
+                                const commentCells = node.querySelectorAll(".comment-cell");
 
-                                const usernameElement = node.querySelector(".username");
-                                const commentElement = node.querySelector(".comment");
+                                commentCells.forEach((cell) => {
+                                    const usernameElement = cell.querySelector(".username");
+                                    const commentElement = cell.querySelector(".comment");
+                                    const emojiElement = cell.querySelector("img.emoji");
+                                    const giftCommentElement = cell.querySelector(".gift-comment");
+                                    const likeElement = cell.querySelector(".like");
 
-                                // 礼物数据
-                                const giftCommentElement = node.querySelector(".gift-comment");
-                                const giftImgElement = node.querySelector(".gift-img");
+                                    if (usernameElement && giftCommentElement) {
+                                        // 礼物处理逻辑
+                                        const username = usernameElement.textContent.trim().replace("：", "");
+                                        const giftContent = giftCommentElement.textContent.trim();
 
-                                const likeElement = node.querySelector(".like");
+                                        console.log(`${username}送出了礼物: ${giftContent}`);
+                                        showMessage(`[礼物消息] ${username}送出了礼物: ${giftContent}`, 'success');
 
-                                if (usernameElement && giftCommentElement) {
-                                    // 礼物数据处理
-                                    const username = usernameElement.textContent.trim();
-                                    console.log(username + "送出了礼物");
-
-                                    // 如果 my_socket 已经初始化，可以在这里发送礼物数据
-                                    if (my_socket) {
-                                        const data = {
-                                            type: "gift",
-                                            username: username,
-                                            // 可以根据需要添加其他礼物相关数据
-                                        };
-                                        console.log(data);
-                                        my_socket.send(JSON.stringify(data));
-                                    }
-                                } else if (usernameElement && likeElement) {
-                                    const username = usernameElement.textContent.trim();
-                                    console.log(username + "点了个赞");
-
-                                    // 如果 my_socket 已经初始化，可以在这里发送礼物数据
-                                    if (my_socket) {
-                                        const data = {
-                                            type: "like",
-                                            username: username,
-                                            // 可以根据需要添加其他礼物相关数据
-                                        };
-                                        console.log(data);
-                                        my_socket.send(JSON.stringify(data));
-                                    }
-                                } else if (
-                                    usernameElement &&
-                                    commentElement &&
-                                    !giftCommentElement &&
-                                    !likeElement
-                                ) {
-                                    const username = usernameElement.textContent.trim().slice(0, -1);
-                                    const content = commentElement.textContent.trim();
-
-                                    console.log(username + ":" + content);
-
-                                    // 获取到弹幕数据
-                                    if (username !== "" && content !== "") {
-                                        const data = {
-                                            type: "comment",
-                                            username: username,
-                                            content: content,
-                                        };
-                                        console.log(data);
-                                        // 如果 my_socket 已经初始化，可以在这里发送数据
+                                        // 如果 my_socket 已经初始化，可以发送礼物数据
                                         if (my_socket) {
+                                            const data = {
+                                                type: "gift",
+                                                username: username,
+                                                gift: giftContent,
+                                            };
+                                            console.log(data);
                                             my_socket.send(JSON.stringify(data));
                                         }
+                                    } else if (usernameElement && likeElement) {
+                                        // 点赞处理逻辑
+                                        const username = usernameElement.textContent.trim().replace("：", "");
+
+                                        console.log(`${username}点了个赞`);
+                                        showMessage(`[点赞消息] ${username}点了个赞`, 'info');
+
+                                        // 如果 my_socket 已经初始化，可以发送点赞数据
+                                        if (my_socket) {
+                                            const data = {
+                                                type: "like",
+                                                username: username,
+                                            };
+                                            console.log(data);
+                                            my_socket.send(JSON.stringify(data));
+                                        }
+                                    } else if (usernameElement && commentElement) {
+                                        // 弹幕处理逻辑
+                                        const username = usernameElement.textContent.trim().replace("：", "");
+                                        let content = "";
+
+                                        // 提取评论内容（包括表情图片的替换）
+                                        function extractCommentContent(element) {
+                                            let content = "";
+                                            element.childNodes.forEach((child) => {
+                                                if (child.nodeType === Node.TEXT_NODE) {
+                                                    content += child.textContent.trim();
+                                                } else if (child.nodeType === Node.ELEMENT_NODE) {
+                                                    if (child.tagName === "IMG" && child.classList.contains("emoji")) {
+                                                        content += child.getAttribute("alt") || "[表情]";
+                                                    } else {
+                                                        content += extractCommentContent(child);
+                                                    }
+                                                }
+                                            });
+                                            return content;
+                                        }
+
+                                        content = extractCommentContent(commentElement);
+
+                                        if (username && content) {
+                                            console.log(`${username}: ${content}`);
+                                            showMessage(`[弹幕消息] ${username}: ${content}`, 'info');
+
+                                            // 构造弹幕数据
+                                            const data = {
+                                                type: "comment",
+                                                username: username,
+                                                content: content,
+                                            };
+                                            console.log(data);
+
+                                            // 如果 my_socket 已经初始化，可以发送数据
+                                            if (my_socket) {
+                                                my_socket.send(JSON.stringify(data));
+                                            }
+                                        }
                                     }
-                                }
+                                });
                             }
                         });
                     }
+
                 });
             });
         } else if (hostname === "mobile.yangkeduo.com") {
@@ -252,6 +322,8 @@
                                     const content = commentElement.textContent.trim();
 
                                     console.log(username + ":" + content);
+                                    showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
 
                                     // 获取到弹幕数据
                                     if (username !== "" && content !== "") {
@@ -298,6 +370,8 @@
                                     const content = commentElement.textContent.trim();
 
                                     console.log(username + ":" + content);
+                                    showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
 
                                     // 获取到弹幕数据
                                     if (username !== "" && content !== "") {
@@ -354,6 +428,8 @@
                                 }
 
                                 console.log(username + ":" + content);
+                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
 
                                 // 获取到弹幕数据
                                 if (username != "" && content != "") {
@@ -420,6 +496,8 @@
                                 }
 
                                 console.log(username + ":" + content);
+                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
 
                                 // 获取到弹幕数据
                                 if (username != "" && content != "") {
@@ -486,6 +564,7 @@
                                 }
 
                                 console.log(username + ":" + content);
+                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
 
                                 // 获取到弹幕数据
                                 if (username != "" && content != "") {
@@ -515,6 +594,7 @@
             my_observer.observe(targetNode, config);
         } catch (error) {
             console.error("观察失败:", error);
+            showMessage("观察失败: " + error.message, 'error');
             setTimeout(() => {
                 console.log("10S后尝试重新开始观察...");
                 // 开始观察
