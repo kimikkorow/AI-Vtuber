@@ -1240,7 +1240,7 @@ class Audio:
             return None
 
 
-    # 播放音频
+    # 合成音频并插入待播放队列
     async def my_play_voice(self, message):
         """合成音频并插入待播放队列
 

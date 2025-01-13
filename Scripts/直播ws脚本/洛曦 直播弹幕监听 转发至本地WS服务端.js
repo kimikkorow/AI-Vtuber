@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         洛曦 直播弹幕监听 转发至本地WS服务端
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.14
 // @description  观察指定 DOM 节点的变化以将数据发送到连接的WebSocket服务端
 // @description  Github：https://github.com/Ikaros-521/AI-Vtuber/tree/main/Scripts/%E7%9B%B4%E6%92%ADws%E8%84%9A%E6%9C%AC
 // @author       Ikaros
@@ -12,6 +12,7 @@
 // @match        https://live.1688.com/zb/play.html*
 // @match        https://tbzb.taobao.com/live*
 // @match        https://redlive.xiaohongshu.com/*
+// @match        https://channels.weixin.qq.com/platform/live/*
 // @grant        none
 // @namespace    https://greasyfork.org/scripts/490966
 // @license      GPL-3.0
@@ -47,6 +48,9 @@
             wsUrl = "ws://127.0.0.1:5001";
         } else if (hostname === "redlive.xiaohongshu.com") {
             console.log("当前直播平台：小红书");
+            wsUrl = "ws://127.0.0.1:5001";
+        } else if (hostname === "channels.weixin.qq.com") {
+            console.log("当前直播平台：微信视频号");
             wsUrl = "ws://127.0.0.1:5001";
         }
 
@@ -399,7 +403,73 @@
                                         if (tmp != "")
                                             live_tag = targetSpan.textContent.trim().slice(0, -1);
                                     }
-                                    
+
+                                    if (i == (spans.length - 2)) {
+                                        const targetSpan = spans[i];
+                                        // 获取用户名
+                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
+                                        if (tmp != "")
+                                            username = tmp;
+                                    } else if (i == (spans.length - 1)) {
+                                        const targetSpan = spans[i];
+                                        // 获取弹幕
+                                        let tmp = targetSpan.textContent.trim();
+                                        if (tmp != "")
+                                            content = tmp;
+                                    }
+                                }
+
+                                console.log(username + ":" + content);
+
+                                // 获取到弹幕数据
+                                if (username != "" && content != "") {
+                                    const data = {
+                                        type: "comment",
+                                        username: username,
+                                        content: content,
+                                    };
+                                    console.log(data);
+                                    my_socket.send(JSON.stringify(data));
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        } else if (hostname === "channels.weixin.qq.com") {
+            // 选择需要观察变化的节点
+            targetNode = document.querySelector(".comment__list");
+
+            // 创建观察器实例
+            my_observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    console.log(mutation);
+                    // console.log(mutation.type);
+                    // 这里处理新增的DOM元素
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            // 判断是否是新增的弹幕消息
+                            if (node.classList.contains("vue-recycle-scroller__item-view")) {
+                                // 新增的动态DOM元素处理
+                                console.log("Added node:", node);
+
+                                const spans = node.getElementsByTagName("span");
+
+                                let message_type = "";
+                                let username = "";
+                                let content = "";
+
+                                console.log(spans.length);
+
+                                for (let i = 0; i < spans.length; i++) {
+                                    if (spans[i].classList.contains("message-type")) {
+                                        const targetSpan = spans[i];
+                                        // 获取用户名
+                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
+                                        if (tmp != "")
+                                            message_type = targetSpan.textContent.trim().slice(0, -1);
+                                    }
+
                                     if (i == (spans.length - 2)) {
                                         const targetSpan = spans[i];
                                         // 获取用户名
@@ -451,6 +521,6 @@
                 my_observer.observe(targetNode, config);
             }, 10000);
         }
-        
+
     }, 10000);
 })();
