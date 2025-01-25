@@ -2527,7 +2527,7 @@ def start_server():
         # 等待子线程结束
         schedule_thread.join()
     elif platform == "dy2":
-        from protobuf.douyin import *
+        # from protobuf.douyin import *
         
         # 这里填一个已登录账号的cookie。不填cookie也可以连接，但是收到弹幕的用户名会打码，UID会变成0
         SESSDATA = ""
