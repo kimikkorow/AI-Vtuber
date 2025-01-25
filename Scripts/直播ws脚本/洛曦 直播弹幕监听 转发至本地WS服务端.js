@@ -6,6 +6,7 @@
 // @description  Github：https://github.com/Ikaros-521/AI-Vtuber/tree/main/Scripts/%E7%9B%B4%E6%92%ADws%E8%84%9A%E6%9C%AC
 // @author       Ikaros
 // @match        https://www.douyu.com/*
+// @match        https://anchor.douyin.com/*
 // @match        https://live.kuaishou.com/u/*
 // @match        https://live.kuaishou.com/u/*
 // @match        https://mobile.yangkeduo.com/*
@@ -98,7 +99,12 @@
             console.log("当前直播平台：微信视频号");
             showMessage("当前直播平台：微信视频号");
             wsUrl = "ws://127.0.0.1:5001";
+        } else if (hostname === "anchor.douyin.com") {
+            console.log("当前直播平台：抖音");
+            showMessage("当前直播平台：抖音");
+            wsUrl = "ws://127.0.0.1:5001";
         }
+
 
         function connectWebSocket() {
             // 创建 WebSocket 连接，适配服务端
@@ -517,6 +523,73 @@
         } else if (hostname === "channels.weixin.qq.com") {
             // 选择需要观察变化的节点
             targetNode = document.querySelector(".comment__list");
+
+            // 创建观察器实例
+            my_observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    console.log(mutation);
+                    // console.log(mutation.type);
+                    // 这里处理新增的DOM元素
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            // 判断是否是新增的弹幕消息
+                            if (node.classList.contains("vue-recycle-scroller__item-view")) {
+                                // 新增的动态DOM元素处理
+                                console.log("Added node:", node);
+
+                                const spans = node.getElementsByTagName("span");
+
+                                let message_type = "";
+                                let username = "";
+                                let content = "";
+
+                                console.log(spans.length);
+
+                                for (let i = 0; i < spans.length; i++) {
+                                    if (spans[i].classList.contains("message-type")) {
+                                        const targetSpan = spans[i];
+                                        // 获取用户名
+                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
+                                        if (tmp != "")
+                                            message_type = targetSpan.textContent.trim().slice(0, -1);
+                                    }
+
+                                    if (i == (spans.length - 2)) {
+                                        const targetSpan = spans[i];
+                                        // 获取用户名
+                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
+                                        if (tmp != "")
+                                            username = tmp;
+                                    } else if (i == (spans.length - 1)) {
+                                        const targetSpan = spans[i];
+                                        // 获取弹幕
+                                        let tmp = targetSpan.textContent.trim();
+                                        if (tmp != "")
+                                            content = tmp;
+                                    }
+                                }
+
+                                console.log(username + ":" + content);
+                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
+
+                                // 获取到弹幕数据
+                                if (username != "" && content != "") {
+                                    const data = {
+                                        type: "comment",
+                                        username: username,
+                                        content: content,
+                                    };
+                                    console.log(data);
+                                    my_socket.send(JSON.stringify(data));
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        } else if (hostname === "anchor.douyin.com") {
+            // 选择需要观察变化的节点
+            targetNode = document.querySelector(".ReactVirtualized__Grid__innerScrollContainer");
 
             // 创建观察器实例
             my_observer = new MutationObserver((mutations) => {

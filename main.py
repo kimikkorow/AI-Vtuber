@@ -613,7 +613,7 @@ def start_server():
                             data["insert_index"] = -1
                             my_handle.reread_handle(data)
                     else:
-                        # 如果启用了“打断对话”功能
+                        # 如果启用了"打断对话"功能
                         if config.get("talk", "interrupt_talk", "enable"):
                             # 判断文本内容是否包含中断词
                             interrupt_word = common.find_substring_in_list(
@@ -2527,12 +2527,18 @@ def start_server():
         # 等待子线程结束
         schedule_thread.join()
     elif platform == "dy2":
-        # 源自：douyinLiveWebFetcher
-        import gzip
-        import string
+        from protobuf.douyin import *
+        
+        # 这里填一个已登录账号的cookie。不填cookie也可以连接，但是收到弹幕的用户名会打码，UID会变成0
+        SESSDATA = ""
 
-        import requests
-        import websocket
+        session: Optional[aiohttp.ClientSession] = None
+        
+        # 支持 wss 连接
+        if config.get("dy2", {}).get("use_wss", False):
+            ws_url = "wss://127.0.0.1:5001"
+        else:
+            ws_url = "ws://127.0.0.1:5001"
 
         def generateMsToken(length=107):
             """
