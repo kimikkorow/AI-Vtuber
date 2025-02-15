@@ -1618,6 +1618,15 @@ class My_handle(metaclass=SingletonMeta):
                 # 替换 \n换行符 \n字符串为空
                 resp_content = re.sub(r'\\n|\n', '', resp_content)
 
+                # 初始化过滤状态
+                filter_state = {
+                    'is_filtering': False,
+                    'current_tag': None,
+                    'buffer': ''
+                }
+                # 过滤<></>标签内容 主要针对deepseek返回
+                resp_content = My_handle.common.llm_resp_content_filter_tags(resp_content, filter_state)
+
             # 判断 回复模板 是否启用
             if My_handle.config.get("reply_template", "enable"):
                 # 根据模板变量关系进行回复内容的替换
@@ -1748,6 +1757,13 @@ class My_handle(metaclass=SingletonMeta):
                 if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
                     resp = resp.iter_lines()
 
+                # 初始化过滤状态
+                filter_state = {
+                    'is_filtering': False,
+                    'current_tag': None,
+                    'buffer': ''
+                }
+
                 for chunk in resp:
                     # logger.warning(chunk)
                     if chunk is None:
@@ -1780,6 +1796,9 @@ class My_handle(metaclass=SingletonMeta):
                                 continue
                         else:
                             if chunk.choices[0].delta.content:
+                                # 过滤<></>标签内容 主要针对deepseek返回
+                                chunk.choices[0].delta.content = My_handle.common.llm_resp_content_filter_tags(chunk.choices[0].delta.content, filter_state)
+
                                 # 流式的内容是追加形式的
                                 tmp += chunk.choices[0].delta.content
                                 resp_content += chunk.choices[0].delta.content
