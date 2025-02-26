@@ -1767,59 +1767,6 @@ class My_handle(metaclass=SingletonMeta):
 
                 buffer = b""
 
-                for chunk in resp:
-                    # logger.warning(chunk)
-                    if chunk is None:
-                        continue
-
-                    if chat_type in ["chatgpt", "zhipu"]:
-                        # 智谱 智能体情况特殊处理
-                        if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
-                            decoded_line = chunk.decode('utf-8')
-                            if decoded_line.startswith('data:'):
-                                data_dict = json.loads(decoded_line[5:])
-                                message = data_dict.get("message")
-                                if len(message) > 0:
-                                    content = message.get("content")
-                                    if len(content) > 0:
-                                        response_type = content.get("type")
-                                        if response_type == "text":
-                                            text = content.get("text", "")
-                                            #logger.warning(f"cut_len={cut_len},智谱返回内容：{text}")
-                                            # 这个是一直输出全部的内容，所以要切分掉已经处理的文本长度
-                                            tmp = text[cut_len:]
-                                            resp_content = text
-                                        else:
-                                            continue
-                                    else:
-                                        continue
-                                else:
-                                    continue
-                            else:
-                                continue
-                        else:
-                            if chunk.choices[0].delta.content:
-                                # 过滤<></>标签内容 主要针对deepseek返回
-                                chunk.choices[0].delta.content = My_handle.common.llm_resp_content_filter_tags(chunk.choices[0].delta.content, filter_state)
-
-                                # 流式的内容是追加形式的
-                                tmp += chunk.choices[0].delta.content
-                                resp_content += chunk.choices[0].delta.content
-                    elif chat_type in ["tongyi"]:
-                        # 这个是一直输出全部的内容，所以要切分掉已经处理的文本长度
-                        tmp = chunk.output.choices[0].message.content[cut_len:]
-                        resp_content = chunk.output.choices[0].message.content
-                    elif chat_type in ["tongyixingchen"]:
-                        # 流式的内容是追加形式的
-                        tmp += chunk.data.choices[0].messages[0].content
-                        resp_content += chunk.data.choices[0].messages[0].content
-                    elif chat_type in ["volcengine"]:
-                        tmp += chunk.choices[0].delta.content
-                        resp_content += chunk.choices[0].delta.content
-                    elif chat_type in ["my_wenxinworkshop"]:
-                        tmp += chunk
-                        resp_content += chunk
-
                 def tmp_handle(resp_json: dict, tmp: str, cut_len: int=0):
                     if resp_json["ret"]:
                         # 切出来的句子
@@ -1937,6 +1884,9 @@ class My_handle(metaclass=SingletonMeta):
                                 continue
                         else:
                             if chunk.choices[0].delta.content:
+                                # 过滤<></>标签内容 主要针对deepseek返回
+                                chunk.choices[0].delta.content = My_handle.common.llm_resp_content_filter_tags(chunk.choices[0].delta.content, filter_state)
+
                                 # 流式的内容是追加形式的
                                 tmp += chunk.choices[0].delta.content
                                 resp_content += chunk.choices[0].delta.content
@@ -1981,6 +1931,10 @@ class My_handle(metaclass=SingletonMeta):
                                     if "event" in data_chunk:
                                         if data_chunk["event"] == "message":
                                             answer = data_chunk.get("answer", "")
+
+                                            # 过滤<></>标签内容 主要针对deepseek返回
+                                            answer = My_handle.common.llm_resp_content_filter_tags(answer, filter_state)
+
                                             tmp += answer
                                             resp_content += answer
                                         elif data_chunk["event"] == "message_end":
@@ -2047,6 +2001,9 @@ class My_handle(metaclass=SingletonMeta):
             
             # 是否启用webui回显
             if webui_show:
+                # 去除resp_content字符串最开始无用的空格和换行
+                resp_content = resp_content.lstrip()
+
                 self.webui_show_chat_log_callback(chat_type, data, resp_content)
 
             # 添加返回到上下文记忆
