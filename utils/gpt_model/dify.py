@@ -23,11 +23,12 @@ class Dify:
             text = re.sub(f'{{{{{key}}}}}', value, text)
         return text
 
-    def get_resp(self, data: dict):
+    def get_resp(self, data: dict, stream: bool = False):
         """请求对应接口，获取返回值
 
         Args:
             data (dict): 含有提问的json数据
+            stream (bool): 是否流式返回
 
         Returns:
             str: 返回的文本回答
@@ -38,22 +39,42 @@ class Dify:
             if self.config_data["type"] == "聊天助手":
                 API_URL = urljoin(self.config_data["api_ip_port"], '/v1/chat-messages')
 
-                data_json = {
-                    "inputs": {},
-                    "query": data["prompt"],
-                    # 阻塞模式
-                    "response_mode": "blocking",
-                    # 会话 ID，需要基于之前的聊天记录继续对话，必须传之前消息的 conversation_id。
-                    "conversation_id": self.conversation_id,
-                    # 用户名是否区分 视情况而定，暂时为了稳定性统一
-                    "user": "test"
-                }
+                if stream:
+                    data_json = {
+                        "inputs": {},
+                        "query": data["prompt"],
+                        # 阻塞模式
+                        "response_mode": "streaming",
+                        # 会话 ID，需要基于之前的聊天记录继续对话，必须传之前消息的 conversation_id。
+                        "conversation_id": self.conversation_id,
+                        # 用户名是否区分 视情况而定，暂时为了稳定性统一
+                        "user": "test"
+                    }
+                else:
+                    data_json = {
+                        "inputs": {},
+                        "query": data["prompt"],
+                        # 阻塞模式
+                        "response_mode": "blocking",
+                        # 会话 ID，需要基于之前的聊天记录继续对话，必须传之前消息的 conversation_id。
+                        "conversation_id": self.conversation_id,
+                        # 用户名是否区分 视情况而定，暂时为了稳定性统一
+                        "user": "test"
+                    }
                 headers = {
                     'Content-Type': 'application/json',
                     'Authorization': f'Bearer {self.config_data["api_key"]}'
                 }
                 
                 response = requests.request("POST", API_URL, headers=headers, json=data_json)
+
+                if response is None:
+                    return None
+
+                # 流式的话 直接返回
+                if stream:
+                    return response
+
                 resp_json = json.loads(response.content)
                 
                 logger.debug(f"[dify] resp_json={resp_json}")
@@ -80,20 +101,37 @@ class Dify:
                 custom_params = self.replace_variables(self.config_data['custom_params'], variables)
                 custom_params = json.loads(custom_params)
 
-                data_json = {
-                    "inputs": custom_params,
-                    # 阻塞模式
-                    "response_mode": "blocking",
-                    # 用户名是否区分 视情况而定，暂时为了稳定性统一
-                    "user": "test"
-                }
-                logger.debug(f"[dify] data_json={data_json}")
+                if stream:
+                    data_json = {
+                        "inputs": custom_params,
+                        # 阻塞模式
+                        "response_mode": "streaming",
+                        # 用户名是否区分 视情况而定，暂时为了稳定性统一
+                        "user": "test"
+                    }
+                else:
+                    data_json = {
+                        "inputs": custom_params,
+                        # 阻塞模式
+                        "response_mode": "blocking",
+                        # 用户名是否区分 视情况而定，暂时为了稳定性统一
+                        "user": "test"
+                    }
+                    logger.debug(f"[dify] data_json={data_json}")
                 headers = {
                     'Content-Type': 'application/json',
                     'Authorization': f'Bearer {self.config_data["api_key"]}'
                 }
                 
                 response = requests.request("POST", API_URL, headers=headers, json=data_json)
+
+                if response is None:
+                    return None
+
+                # 流式的话 直接返回
+                if stream:
+                    return response
+                
                 resp_json = json.loads(response.content)
                 
                 logger.debug(f"[dify] resp_json={resp_json}")
@@ -112,6 +150,17 @@ class Dify:
             logger.error(traceback.format_exc())
 
         return None
+    
+    # 添加AI返回消息到会话，用于提供上下文记忆
+    def add_assistant_msg_to_session(self, conversation_id: str):
+        try:
+            # 启用历史就给我记住！
+            if self.config_data['history_enable']:
+                self.conversation_id = conversation_id
+            return {"ret": True}
+        except Exception as e:
+            logger.error(traceback.format_exc())
+            return {"ret": False}
 
 if __name__ == '__main__':
     data = {

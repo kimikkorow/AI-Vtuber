@@ -45,7 +45,7 @@ class My_handle(metaclass=SingletonMeta):
     config = None
     audio = None
     my_translate = None
-
+    
     # 是否在数据处理中
     is_handleing = 0
 
@@ -1701,6 +1701,7 @@ class My_handle(metaclass=SingletonMeta):
                     "tongyixingchen": lambda: self.tongyixingchen.get_resp(data["content"], stream=True),
                     "my_wenxinworkshop": lambda: self.my_wenxinworkshop.get_resp(data["content"], stream=True),
                     "volcengine": lambda: self.volcengine.get_resp({"prompt": data["content"]}, stream=True),
+                    "dify": lambda: self.dify.get_resp({"prompt": data["content"]}, stream=True),
                 }
             elif type == "vision":
                 pass
@@ -1747,6 +1748,93 @@ class My_handle(metaclass=SingletonMeta):
                 # 智谱 智能体情况特殊处理
                 if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
                     resp = resp.iter_lines()
+
+                buffer = b""  # 用于存储不完整的数据行 仅供dify使用
+
+                def tmp_handle(resp_json: dict, tmp: str, cut_len: int=0):
+                    if resp_json["ret"]:
+                        # 切出来的句子
+                        tmp_content = resp_json["content1"]
+                        
+                        #logger.warning(f"句子生成：{tmp_content}")
+
+                        if chat_type in ["chatgpt", "zhipu", "tongyixingchen", "my_wenxinworkshop", "volcengine", "dify"]:
+                            # 智谱 智能体情况特殊处理
+                            if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
+                                # 记录 并追加切出的文本长度
+                                cut_len += len(tmp_content)
+                            else:
+                                # 标点符号后的内容包留，用于之后继续追加内容
+                                tmp = resp_json["content2"]
+                        elif chat_type in ["tongyi"]:
+                            # 记录 并追加切出的文本长度
+                            cut_len += len(tmp_content)
+                            
+                        """
+                        双重过滤，为您保驾护航
+                        """
+                        tmp_content = tmp_content.strip()
+
+                        tmp_content = tmp_content.replace('\n', '。')
+
+                        # 替换 \n换行符 \n字符串为空
+                        tmp_content = re.sub(r'\\n|\n', '', tmp_content)
+                        
+                        # LLM回复的内容进行违禁判断
+                        tmp_content = self.prohibitions_handle(tmp_content)
+                        if tmp_content is None:
+                            return tmp, cut_len
+
+                        # logger.info("tmp_content=" + tmp_content)
+
+                        # 回复内容是否进行翻译
+                        if My_handle.config.get("translate", "enable") and (My_handle.config.get("translate", "trans_type") == "回复" or \
+                            My_handle.config.get("translate", "trans_type") == "弹幕+回复"):
+                            tmp = My_handle.my_translate.trans(tmp_content)
+                            if tmp:
+                                tmp_content = tmp
+
+                        self.write_to_comment_log(tmp_content, data)
+
+                        # 判断按键映射触发类型
+                        if My_handle.config.get("key_mapping", "type") == "回复" or My_handle.config.get("key_mapping", "type") == "弹幕+回复":
+                            # 替换内容
+                            data["content"] = tmp_content
+                            # 按键映射 触发后不执行后面的其他功能
+                            if self.key_mapping_handle("回复", data):
+                                pass
+
+                        # 判断自定义命令触发类型
+                        if My_handle.config.get("custom_cmd", "type") == "回复" or My_handle.config.get("custom_cmd", "type") == "弹幕+回复":
+                            # 替换内容
+                            data["content"] = tmp_content
+                            # 自定义命令 触发后不执行后面的其他功能
+                            if self.custom_cmd_handle("回复", data):
+                                pass
+                            
+
+                        # 音频合成时需要用到的重要数据
+                        message = {
+                            "type": "comment",
+                            "tts_type": My_handle.config.get("audio_synthesis_type"),
+                            "data": My_handle.config.get(My_handle.config.get("audio_synthesis_type")),
+                            "config": My_handle.config.get("filter"),
+                            "username": data['username'],
+                            "content": tmp_content
+                        }
+
+                        # 洛曦 直播弹幕助手
+                        if My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "enable") and \
+                            "comment_reply" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "type") and \
+                            "消息产生时" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "trigger_position"):
+                            asyncio.run(send_msg_to_live_comment_assistant(My_handle.config.get("luoxi_project", "Live_Comment_Assistant"), tmp_content))
+
+                        self.audio_synthesis_handle(message)
+
+                        return tmp, cut_len
+
+                    return tmp, cut_len
+
 
                 for chunk in resp:
                     # logger.warning(chunk)
@@ -1797,96 +1885,59 @@ class My_handle(metaclass=SingletonMeta):
                     elif chat_type in ["my_wenxinworkshop"]:
                         tmp += chunk
                         resp_content += chunk
-
-                    def tmp_handle(resp_json: dict, tmp: str, cut_len: int=0):
-                        if resp_json["ret"]:
-                            # 切出来的句子
-                            tmp_content = resp_json["content1"]
+                    elif chat_type in ["dify"]:
+                        # 将新的数据添加到缓冲区
+                        buffer += chunk
+                        
+                        # 初始化resp_json
+                        resp_json = {"ret": False, "content1": "", "content2": ""}
+                        
+                        # 尝试按行分割数据
+                        while b"\n" in buffer:
+                            # 获取一个完整的行
+                            line, buffer = buffer.split(b"\n", 1)
+                            line = line.strip()
                             
-                            #logger.warning(f"句子生成：{tmp_content}")
-
-                            if chat_type in ["chatgpt", "zhipu", "tongyixingchen", "my_wenxinworkshop", "volcengine"]:
-                                # 智谱 智能体情况特殊处理
-                                if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
-                                    # 记录 并追加切出的文本长度
-                                    cut_len += len(tmp_content)
-                                else:
-                                    # 标点符号后的内容包留，用于之后继续追加内容
-                                    tmp = resp_json["content2"]
-                            elif chat_type in ["tongyi"]:
-                                # 记录 并追加切出的文本长度
-                                cut_len += len(tmp_content)
+                            # 跳过空行
+                            if not line:
+                                continue
                                 
-                            """
-                            双重过滤，为您保驾护航
-                            """
-                            tmp_content = tmp_content.strip()
+                            # 处理data:前缀
+                            if line.startswith(b"data: "):
+                                try:
+                                    # 解析JSON数据
+                                    data_chunk = json.loads(line[6:].decode('utf-8'))
+                                    
+                                    # 处理不同类型的事件
+                                    if "event" in data_chunk:
+                                        if data_chunk["event"] == "message":
+                                            answer = data_chunk.get("answer", "")
+                                            tmp += answer
+                                            resp_content += answer
+                                        elif data_chunk["event"] == "message_end":
+                                            self.dify.add_assistant_msg_to_session(data_chunk["conversation_id"])
+                                            if not resp_json['ret']:
+                                                resp_json['ret'] = True
+                                                resp_json = split_by_chinese_punctuation(tmp)
+                                                tmp, cut_len = tmp_handle(resp_json, tmp, cut_len)
+                                            logger.info(f"[{chat_type}] 流式接收完毕")
+                                            break
+                                        elif data_chunk["event"] == "error":
+                                            logger.error(f"Dify返回错误: {data_chunk}")
+                                            break
+                                except json.JSONDecodeError as e:
+                                    logger.error(f"JSON解析错误: {e}. 原始数据: {line}")
+                                    continue
+                            else:
+                                logger.debug(f"跳过非data:开头的行: {line}")
+                                continue
 
-                            tmp_content = tmp_content.replace('\n', '。')
-
-                            # 替换 \n换行符 \n字符串为空
-                            tmp_content = re.sub(r'\\n|\n', '', tmp_content)
-                            
-                            # LLM回复的内容进行违禁判断
-                            tmp_content = self.prohibitions_handle(tmp_content)
-                            if tmp_content is None:
-                                return tmp, cut_len
-
-                            # logger.info("tmp_content=" + tmp_content)
-
-                            # 回复内容是否进行翻译
-                            if My_handle.config.get("translate", "enable") and (My_handle.config.get("translate", "trans_type") == "回复" or \
-                                My_handle.config.get("translate", "trans_type") == "弹幕+回复"):
-                                tmp = My_handle.my_translate.trans(tmp_content)
-                                if tmp:
-                                    tmp_content = tmp
-
-                            self.write_to_comment_log(tmp_content, data)
-
-                            # 判断按键映射触发类型
-                            if My_handle.config.get("key_mapping", "type") == "回复" or My_handle.config.get("key_mapping", "type") == "弹幕+回复":
-                                # 替换内容
-                                data["content"] = tmp_content
-                                # 按键映射 触发后不执行后面的其他功能
-                                if self.key_mapping_handle("回复", data):
-                                    pass
-
-                            # 判断自定义命令触发类型
-                            if My_handle.config.get("custom_cmd", "type") == "回复" or My_handle.config.get("custom_cmd", "type") == "弹幕+回复":
-                                # 替换内容
-                                data["content"] = tmp_content
-                                # 自定义命令 触发后不执行后面的其他功能
-                                if self.custom_cmd_handle("回复", data):
-                                    pass
-                                
-
-                            # 音频合成时需要用到的重要数据
-                            message = {
-                                "type": "comment",
-                                "tts_type": My_handle.config.get("audio_synthesis_type"),
-                                "data": My_handle.config.get(My_handle.config.get("audio_synthesis_type")),
-                                "config": My_handle.config.get("filter"),
-                                "username": data['username'],
-                                "content": tmp_content
-                            }
-
-                            # 洛曦 直播弹幕助手
-                            if My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "enable") and \
-                                "comment_reply" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "type") and \
-                                "消息产生时" in My_handle.config.get("luoxi_project", "Live_Comment_Assistant", "trigger_position"):
-                                asyncio.run(send_msg_to_live_comment_assistant(My_handle.config.get("luoxi_project", "Live_Comment_Assistant"), tmp_content))
-
-                            self.audio_synthesis_handle(message)
-
-                            return tmp, cut_len
-
-                        return tmp, cut_len
-
-                    # 用于切分，根据中文标点符号切分语句
-                    resp_json = split_by_chinese_punctuation(tmp)
-                    #logger.warning(f"resp_json={resp_json}")
-                    tmp, cut_len = tmp_handle(resp_json, tmp, cut_len)
-                    #logger.warning(f"cut_len={cut_len}, tmp={tmp}")
+                    if chat_type not in ["dify"]:
+                        # 用于切分，根据中文标点符号切分语句
+                        resp_json = split_by_chinese_punctuation(tmp)
+                        #logger.warning(f"resp_json={resp_json}")
+                        tmp, cut_len = tmp_handle(resp_json, tmp, cut_len)
+                        #logger.warning(f"cut_len={cut_len}, tmp={tmp}")
 
                     if chat_type in ["chatgpt", "zhipu"]:
                         # logger.info(chunk)
@@ -1918,6 +1969,7 @@ class My_handle(metaclass=SingletonMeta):
 
                             logger.info(f"[{chat_type}] 流式接收完毕")
                             break
+
 
             # 返回为空，触发异常报警
             else:

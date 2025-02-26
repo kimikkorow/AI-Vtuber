@@ -569,6 +569,7 @@
     "type": "聊天助手",
     "api_key": "app-64xu0vQjP2kxN4DKR8Ch7ZGY",
     "history_enable": true,
+    "stream": true,
     "custom_params": "{\n\"prompt\": \"{{comment}}\"\n}"
   },
   "volcengine": {
