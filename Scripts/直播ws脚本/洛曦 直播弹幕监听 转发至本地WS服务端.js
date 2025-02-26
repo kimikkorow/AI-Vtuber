@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         洛曦 直播弹幕监听 转发至本地WS服务端
 // @namespace    http://tampermonkey.net/
-// @version      0.16
+// @version      1.0
 // @description  观察指定 DOM 节点的变化以将数据发送到连接的WebSocket服务端
 // @description  Github：https://github.com/Ikaros-521/AI-Vtuber/tree/main/Scripts/%E7%9B%B4%E6%92%ADws%E8%84%9A%E6%9C%AC
 // @author       Ikaros
 // @match        https://www.douyu.com/*
-// @match        https://anchor.douyin.com/*
 // @match        https://live.kuaishou.com/u/*
 // @match        https://live.kuaishou.com/u/*
 // @match        https://mobile.yangkeduo.com/*
@@ -14,15 +13,19 @@
 // @match        https://tbzb.taobao.com/live*
 // @match        https://redlive.xiaohongshu.com/*
 // @match        https://channels.weixin.qq.com/platform/live/*
+// @match        https://buyin.jinritemai.com/dashboard/live/control*
 // @grant        none
 // @namespace    https://greasyfork.org/scripts/490966
 // @license      GPL-3.0
-// @downloadURL https://update.greasyfork.org/scripts/490966/%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E7%9B%91%E5%90%AC%20%E8%BD%AC%E5%8F%91%E8%87%B3%E6%9C%AC%E5%9C%B0WS%E6%9C%8D%E5%8A%A1%E7%AB%AF.user.js
-// @updateURL https://update.greasyfork.org/scripts/490966/%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E7%9B%91%E5%90%AC%20%E8%BD%AC%E5%8F%91%E8%87%B3%E6%9C%AC%E5%9C%B0WS%E6%9C%8D%E5%8A%A1%E7%AB%AF.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/490966/%E6%B4%9B%E6%9B%A6%20%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E7%9B%91%E5%90%AC%20%E8%BD%AC%E5%8F%91%E8%87%B3%E6%9C%AC%E5%9C%B0WS%E6%9C%8D%E5%8A%A1%E7%AB%AF.user.js
+// @updateURL https://update.greasyfork.org/scripts/490966/%E6%B4%9B%E6%9B%A6%20%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E7%9B%91%E5%90%AC%20%E8%BD%AC%E5%8F%91%E8%87%B3%E6%9C%AC%E5%9C%B0WS%E6%9C%8D%E5%8A%A1%E7%AB%AF.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
+
+
+    let wsUrl = "ws://127.0.0.1:5001";
 
     // 在文件开头添加一个函数，用于创建和显示消息框
     function showMessage(message, type = 'info') {
@@ -65,7 +68,6 @@
 
     setTimeout(function () {
         let my_socket = null;
-        let wsUrl = "ws://127.0.0.1:5001";
         let targetNode = null;
         let my_observer = null;
 
@@ -99,12 +101,7 @@
             console.log("当前直播平台：微信视频号");
             showMessage("当前直播平台：微信视频号");
             wsUrl = "ws://127.0.0.1:5001";
-        } else if (hostname === "anchor.douyin.com") {
-            console.log("当前直播平台：抖音");
-            showMessage("当前直播平台：抖音");
-            wsUrl = "ws://127.0.0.1:5001";
         }
-
 
         function connectWebSocket() {
             // 创建 WebSocket 连接，适配服务端
@@ -140,8 +137,11 @@
             });
         }
 
-        // 初始连接
-        connectWebSocket();
+        if (hostname != "buyin.jinritemai.com") {
+            // 初始连接
+            connectWebSocket();
+        }
+
         if (hostname === "www.douyu.com") {
             // 选择需要观察变化的节点
             targetNode = document.querySelector(".Barrage-list");
@@ -587,73 +587,6 @@
                     }
                 });
             });
-        } else if (hostname === "anchor.douyin.com") {
-            // 选择需要观察变化的节点
-            targetNode = document.querySelector(".ReactVirtualized__Grid__innerScrollContainer");
-
-            // 创建观察器实例
-            my_observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    console.log(mutation);
-                    // console.log(mutation.type);
-                    // 这里处理新增的DOM元素
-                    if (mutation.type === "childList") {
-                        mutation.addedNodes.forEach((node) => {
-                            // 判断是否是新增的弹幕消息
-                            if (node.classList.contains("vue-recycle-scroller__item-view")) {
-                                // 新增的动态DOM元素处理
-                                console.log("Added node:", node);
-
-                                const spans = node.getElementsByTagName("span");
-
-                                let message_type = "";
-                                let username = "";
-                                let content = "";
-
-                                console.log(spans.length);
-
-                                for (let i = 0; i < spans.length; i++) {
-                                    if (spans[i].classList.contains("message-type")) {
-                                        const targetSpan = spans[i];
-                                        // 获取用户名
-                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
-                                        if (tmp != "")
-                                            message_type = targetSpan.textContent.trim().slice(0, -1);
-                                    }
-
-                                    if (i == (spans.length - 2)) {
-                                        const targetSpan = spans[i];
-                                        // 获取用户名
-                                        let tmp = targetSpan.textContent.trim().slice(0, -1);
-                                        if (tmp != "")
-                                            username = tmp;
-                                    } else if (i == (spans.length - 1)) {
-                                        const targetSpan = spans[i];
-                                        // 获取弹幕
-                                        let tmp = targetSpan.textContent.trim();
-                                        if (tmp != "")
-                                            content = tmp;
-                                    }
-                                }
-
-                                console.log(username + ":" + content);
-                                showMessage("[弹幕消息] " + username + ":" + content, 'info');
-
-                                // 获取到弹幕数据
-                                if (username != "" && content != "") {
-                                    const data = {
-                                        type: "comment",
-                                        username: username,
-                                        content: content,
-                                    };
-                                    console.log(data);
-                                    my_socket.send(JSON.stringify(data));
-                                }
-                            }
-                        });
-                    }
-                });
-            });
         }
 
         // 配置观察选项
@@ -662,17 +595,305 @@
             subtree: true,
         };
 
-        try {
-            // 开始观察
-            my_observer.observe(targetNode, config);
-        } catch (error) {
-            console.error("观察失败:", error);
-            showMessage("观察失败: " + error.message, 'error');
-            setTimeout(() => {
-                console.log("10S后尝试重新开始观察...");
+        let timeoutId = null; // 定时器ID
+        let cycleTimeoutId = null; // 循环周期定时器ID
+
+        // 创建配置界面
+        function createConfigUI() {
+            const configDiv = document.createElement('div');
+            configDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #ffffff80;
+                border-radius: 8px;
+                box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+                padding: 15px;
+                z-index: 1000;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            `;
+
+            configDiv.innerHTML = `
+                <button id="toggleConfig" style="
+                    width: 100%;
+                    padding: 8px 15px;
+                    background: #409EFF;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: background-color 0.3s;
+                ">展开配置</button>
+                <div id="configPanel" style="
+                    display: none;
+                    margin-top: 10px;
+                ">
+                    <!-- WS监听配置 -->
+                    <div style="
+                        margin-bottom: 20px;
+                        padding: 15px;
+                        border: 1px solid #DCDFE6;
+                        border-radius: 4px;
+                        background: #F5F7FA;
+                    ">
+                        <h3 style="
+                            margin: 0 0 15px 0;
+                            color: #303133;
+                            font-size: 16px;
+                            font-weight: 500;
+                        ">WS监听配置</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #606266; font-size: 14px;">
+                                WebSocket 地址:
+                            </label>
+                            <input type="text" id="wsUrl" value="${wsUrl}" style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid #DCDFE6;
+                                border-radius: 4px;
+                                box-sizing: border-box;
+                                font-size: 14px;
+                                transition: border-color 0.3s;
+                            "/>
+                        </div>
+                        <button id="saveConfig" style="
+                            width: 100%;
+                            padding: 8px 15px;
+                            background: #409EFF;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            transition: background-color 0.3s;
+                        ">保存WS配置</button>
+                    </div>
+
+                    <!-- 商品弹窗配置 -->
+                    <div style="
+                        padding: 15px;
+                        border: 1px solid #DCDFE6;
+                        border-radius: 4px;
+                        background: #F5F7FA;
+                    ">
+                        <h3 style="
+                            margin: 0 0 15px 0;
+                            color: #303133;
+                            font-size: 16px;
+                            font-weight: 500;
+                        ">商品弹窗配置</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #606266; font-size: 14px;">
+                                商品编号 (空格分隔):
+                            </label>
+                            <input type="text" id="itemIndices" style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid #DCDFE6;
+                                border-radius: 4px;
+                                box-sizing: border-box;
+                                font-size: 14px;
+                                transition: border-color 0.3s;
+                            "/>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #606266; font-size: 14px;">
+                                每次触发延迟 (毫秒):
+                            </label>
+                            <input type="number" id="delay" value="5000" style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid #DCDFE6;
+                                border-radius: 4px;
+                                box-sizing: border-box;
+                                font-size: 14px;
+                                transition: border-color 0.3s;
+                            "/>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; color: #606266; font-size: 14px;">
+                                循环周期延迟 (毫秒):
+                            </label>
+                            <input type="number" id="cycleDelay" value="5000" style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid #DCDFE6;
+                                border-radius: 4px;
+                                box-sizing: border-box;
+                                font-size: 14px;
+                                transition: border-color 0.3s;
+                            "/>
+                        </div>
+                        <button id="applyConfig" style="
+                            width: 100%;
+                            padding: 8px 15px;
+                            background: #67C23A;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 14px;
+                            transition: background-color 0.3s;
+                        ">启动自动弹窗</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(configDiv);
+
+            // 添加悬停效果
+            const buttons = configDiv.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.addEventListener('mouseover', function() {
+                    this.style.opacity = '0.8';
+                });
+                button.addEventListener('mouseout', function() {
+                    this.style.opacity = '1';
+                });
+            }
+
+            // 添加输入框焦点效果
+            const inputs = configDiv.getElementsByTagName('input');
+            for (let input of inputs) {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#409EFF';
+                });
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = '#DCDFE6';
+                });
+            }
+
+            document.getElementById('toggleConfig').addEventListener('click', () => {
+                const configPanel = document.getElementById('configPanel');
+                configPanel.style.display = configPanel.style.display === 'none' ? 'block' : 'none';
+            });
+
+            document.getElementById('applyConfig').addEventListener('click', applyConfig);
+            document.getElementById('saveConfig').addEventListener('click', saveConfig);
+        }
+
+        // 保存监听配置
+        function saveConfig() {
+            const newWsUrl = document.getElementById('wsUrl').value;
+
+            // 检查WebSocket地址格式
+            if (!newWsUrl.startsWith('ws://') && !newWsUrl.startsWith('wss://')) {
+                showMessage('WebSocket地址格式错误，必须以ws://或wss://开头', 'error');
+                return;
+            }
+
+            try {
+                new URL(newWsUrl);
+                wsUrl = newWsUrl; // 更新 WebSocket 地址
+                showMessage('配置保存成功', 'success');
+            } catch (error) {
+                showMessage('WebSocket地址格式无效', 'error');
+            }
+        }
+
+        // 应用配置
+        function applyConfig() {
+            const itemIndicesInput = document.getElementById('itemIndices').value;
+            if (!itemIndicesInput.trim()) {
+                showMessage('请输入商品编号', 'warning');
+                return;
+            }
+
+            stopLoop();
+
+            const delay = parseInt(document.getElementById('delay').value, 10);
+            const cycleDelay = parseInt(document.getElementById('cycleDelay').value, 10);
+
+            // 验证延迟时间
+            if (delay < 0 || isNaN(delay)) {
+                showMessage('触发延迟时间必须大于0', 'warning');
+                return;
+            }
+            if (cycleDelay < 0 || isNaN(cycleDelay)) {
+                showMessage('循环周期延迟时间必须大于0', 'warning');
+                return;
+            }
+
+            const itemIndices = itemIndicesInput.split(' ')
+                .filter(str => str.trim() !== '')
+                .map(str => parseInt(str.trim(), 10));
+
+            // 验证商品编号
+            if (itemIndices.some(index => isNaN(index) || index <= 0)) {
+                showMessage('商品编号必须为正整数', 'warning');
+                return;
+            }
+
+            startLoop(itemIndices, delay, cycleDelay);
+            showMessage('自动弹窗已启动', 'success');
+        }
+
+        // 启动循环
+        function startLoop(itemIndices, delay, cycleDelay) {
+            if (itemIndices.length === 0) return;
+
+            const triggerNext = (index = 0) => {
+                if (index >= itemIndices.length) {
+                    // 结束一轮后等待循环周期延迟再开始下一轮
+                    cycleTimeoutId = setTimeout(() => triggerNext(0), cycleDelay);
+                    return;
+                }
+
+                const itemIndex = itemIndices[index] - 1;
+                if (isNaN(itemIndex) || itemIndex < 0) {
+                    console.error(`商品编号 ${itemIndex + 1} 无效`);
+                    triggerNext(index + 1);
+                    return;
+                }
+                const buttonIndex = 3 + 6 * itemIndex;
+
+                try {
+                    const buttons = document.getElementsByClassName("lvc2-grey-btn");
+                    if(buttons[buttonIndex]) {
+                        buttons[buttonIndex].click();
+                        console.log(`已触发商品编号 ${itemIndex + 1} 的弹窗`);
+                    } else {
+                        console.error("无法找到指定的按钮！");
+                    }
+                } catch (error) {
+                    console.error("触发弹窗时发生错误：", error);
+                }
+
+                timeoutId = setTimeout(() => triggerNext(index + 1), delay);
+            };
+
+            triggerNext();
+        }
+
+        // 停止循环
+        function stopLoop() {
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            if (cycleTimeoutId !== null) {
+                clearTimeout(cycleTimeoutId);
+                cycleTimeoutId = null;
+            }
+        }
+
+        // 巨量百应
+        if (hostname === "buyin.jinritemai.com") {
+            // 初始化
+            createConfigUI();
+        } else {
+            try {
                 // 开始观察
                 my_observer.observe(targetNode, config);
-            }, 10000);
+            } catch (error) {
+                console.error("观察失败:", error);
+                showMessage("观察失败: " + error.message, 'error');
+                setTimeout(() => {
+                    console.log("10S后尝试重新开始观察...");
+                    // 开始观察
+                    my_observer.observe(targetNode, config);
+                }, 10000);
+            }
         }
 
     }, 10000);

@@ -1618,6 +1618,15 @@ class My_handle(metaclass=SingletonMeta):
                 # 替换 \n换行符 \n字符串为空
                 resp_content = re.sub(r'\\n|\n', '', resp_content)
 
+                # 初始化过滤状态
+                filter_state = {
+                    'is_filtering': False,
+                    'current_tag': None,
+                    'buffer': ''
+                }
+                # 过滤<></>标签内容 主要针对deepseek返回
+                resp_content = My_handle.common.llm_resp_content_filter_tags(resp_content, filter_state)
+
             # 判断 回复模板 是否启用
             if My_handle.config.get("reply_template", "enable"):
                 # 根据模板变量关系进行回复内容的替换
@@ -1749,7 +1758,67 @@ class My_handle(metaclass=SingletonMeta):
                 if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
                     resp = resp.iter_lines()
 
-                buffer = b""  # 用于存储不完整的数据行 仅供dify使用
+                # 初始化过滤状态
+                filter_state = {
+                    'is_filtering': False,
+                    'current_tag': None,
+                    'buffer': ''
+                }
+
+                buffer = b""
+
+                for chunk in resp:
+                    # logger.warning(chunk)
+                    if chunk is None:
+                        continue
+
+                    if chat_type in ["chatgpt", "zhipu"]:
+                        # 智谱 智能体情况特殊处理
+                        if chat_type == "zhipu" and My_handle.config.get("zhipu", "model") == "智能体":
+                            decoded_line = chunk.decode('utf-8')
+                            if decoded_line.startswith('data:'):
+                                data_dict = json.loads(decoded_line[5:])
+                                message = data_dict.get("message")
+                                if len(message) > 0:
+                                    content = message.get("content")
+                                    if len(content) > 0:
+                                        response_type = content.get("type")
+                                        if response_type == "text":
+                                            text = content.get("text", "")
+                                            #logger.warning(f"cut_len={cut_len},智谱返回内容：{text}")
+                                            # 这个是一直输出全部的内容，所以要切分掉已经处理的文本长度
+                                            tmp = text[cut_len:]
+                                            resp_content = text
+                                        else:
+                                            continue
+                                    else:
+                                        continue
+                                else:
+                                    continue
+                            else:
+                                continue
+                        else:
+                            if chunk.choices[0].delta.content:
+                                # 过滤<></>标签内容 主要针对deepseek返回
+                                chunk.choices[0].delta.content = My_handle.common.llm_resp_content_filter_tags(chunk.choices[0].delta.content, filter_state)
+
+                                # 流式的内容是追加形式的
+                                tmp += chunk.choices[0].delta.content
+                                resp_content += chunk.choices[0].delta.content
+                    elif chat_type in ["tongyi"]:
+                        # 这个是一直输出全部的内容，所以要切分掉已经处理的文本长度
+                        tmp = chunk.output.choices[0].message.content[cut_len:]
+                        resp_content = chunk.output.choices[0].message.content
+                    elif chat_type in ["tongyixingchen"]:
+                        # 流式的内容是追加形式的
+                        tmp += chunk.data.choices[0].messages[0].content
+                        resp_content += chunk.data.choices[0].messages[0].content
+                    elif chat_type in ["volcengine"]:
+                        tmp += chunk.choices[0].delta.content
+                        resp_content += chunk.choices[0].delta.content
+                    elif chat_type in ["my_wenxinworkshop"]:
+                        tmp += chunk
+                        resp_content += chunk
 
                 def tmp_handle(resp_json: dict, tmp: str, cut_len: int=0):
                     if resp_json["ret"]:
