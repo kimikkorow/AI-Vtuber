@@ -2500,6 +2500,7 @@ def goto_func_page():
                         "api_key": (input_dify_api_key, 'str'),
                         "type": (select_dify_type, 'str'),
                         "history_enable": (switch_dify_history_enable, 'bool'),
+                        "stream": (switch_dify_stream, 'bool'),
                         "custom_params": (textarea_dify_custom_params, 'str'),  
                     }
                 if config.get("webui", "show_card", "llm", "gpt4free"):
@@ -5361,6 +5362,8 @@ def goto_func_page():
                             options={'聊天助手': '聊天助手', '工作流': '工作流'}, 
                             value=config.get("dify", "type")
                         ).style("width:200px")
+                        switch_dify_stream = ui.switch('流式响应', value=config.get("dify", "stream")).style(switch_internal_css)
+                        
                         switch_dify_history_enable = ui.switch('上下文记忆', value=config.get("dify", "history_enable")).style(switch_internal_css)
                         textarea_dify_custom_params = ui.textarea(
                             label=f"工作流自定义参数（JSON）", 
