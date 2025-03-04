@@ -1937,11 +1937,16 @@ class My_handle(metaclass=SingletonMeta):
 
                                             tmp += answer
                                             resp_content += answer
+
+                                            resp_json = split_by_chinese_punctuation(tmp)
+                                            #logger.warning(f"resp_json={resp_json}")
+                                            tmp, cut_len = tmp_handle(resp_json, tmp, cut_len)
                                         elif data_chunk["event"] == "message_end":
                                             self.dify.add_assistant_msg_to_session(data_chunk["conversation_id"])
+                                            resp_json = split_by_chinese_punctuation(tmp)
                                             if not resp_json['ret']:
                                                 resp_json['ret'] = True
-                                                resp_json = split_by_chinese_punctuation(tmp)
+                                                logger.warning(f"resp_json={resp_json}")
                                                 tmp, cut_len = tmp_handle(resp_json, tmp, cut_len)
                                             logger.info(f"[{chat_type}] 流式接收完毕")
                                             break
