@@ -1400,7 +1400,8 @@ class Common:
             dict|str: 包含响应的 JSON数据 | 字符串数据
         """
         try:
-            await self.send_async_request("http://124.221.164.49:8001/heartbeat", "POST", None)
+            pass
+            # await self.send_async_request("http://124.221.164.49:8001/heartbeat", "POST", None)
         except Exception as e:
             # logger.error(traceback.format_exc())
             # logger.error(f"请求出错: {e}")
