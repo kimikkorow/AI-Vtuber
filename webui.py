@@ -2884,6 +2884,12 @@ def goto_func_page():
                         "noise_scale_w": (input_melotts_noise_scale_w, 'float'),
                         "speed": (input_melotts_speed, 'float'),
                     }
+                if config.get("webui", "show_card", "tts", "index_tts"):
+                    config_mapping["index_tts"] = {
+                        "api_ip_port": (input_index_tts_api_ip_port, 'str'),
+                        "prompt_audio": (input_index_tts_prompt_audio, 'str'),
+                        "temperature": (input_index_tts_temperature, 'float'),
+                    }
 
                 config_data = update_config(config_mapping, config, config_data, "tts")
 
@@ -3344,6 +3350,7 @@ def goto_func_page():
                                 "f5_tts": (switch_webui_show_card_tts_f5_tts, 'bool'),
                                 "multitts": (switch_webui_show_card_tts_multitts, 'bool'),
                                 "melotts": (switch_webui_show_card_tts_melotts, 'bool'),
+                                "index_tts": (switch_webui_show_card_tts_index_tts, 'bool'),
                             },
                             "svc": {
                                 "ddsp_svc": (switch_webui_show_card_svc_ddsp_svc, 'bool'),
@@ -3493,6 +3500,7 @@ def goto_func_page():
         'f5_tts': 'F5-TTS',
         'multitts': 'MultiTTS',
         'melotts': 'MeloTTS',
+        'index_tts': 'Index-TTS',
     }
 
     # 聊天类型所有配置项
@@ -6376,7 +6384,21 @@ def goto_func_page():
                         input_melotts_noise_scale = ui.input(label='noise_scale', value=config.get("melotts", "noise_scale"), placeholder='noise_scale').style("width:100px;").tooltip("noise_scale")
                         input_melotts_noise_scale_w = ui.input(label='noise_scale_w', value=config.get("melotts", "noise_scale_w"), placeholder='noise_scale_w').style("width:100px;").tooltip("noise_scale_w")
                         input_melotts_speed = ui.input(label='语速', value=config.get("melotts", "speed"), placeholder='0-10，默认：1').style("width:100px;").tooltip("语速，默认：1")
-                            
+            if config.get("webui", "show_card", "tts", "index_tts"): 
+                with ui.card().style(card_css):
+                    ui.label("Index-TTS")
+                    with ui.row():
+                        input_index_tts_api_ip_port = ui.input(
+                            label='API地址', 
+                            value=config.get("index_tts", "api_ip_port"), 
+                            placeholder='Index-TTS API程序所在设备的IP地址以及端口号',
+                            validation={
+                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
+                            }
+                        ).style("width:200px;").tooltip("Index-TTS API程序所在设备的IP地址以及端口号")
+                        input_index_tts_prompt_audio = ui.input(label='prompt音频路径', value=config.get("index_tts", "prompt_audio"), placeholder='例如：E:\\1.wav').style("width:200px;").tooltip("prompt音频路径")
+                        input_index_tts_temperature = ui.input(label='temperature', value=config.get("index_tts", "temperature"), placeholder='temperature').style("width:200px;").tooltip("temperature")
+                        
         with ui.tab_panel(svc_page).style(tab_panel_css):
             if config.get("webui", "show_card", "svc", "ddsp_svc"):
                 with ui.card().style(card_css):
@@ -7551,7 +7573,7 @@ def goto_func_page():
                         switch_webui_show_card_tts_f5_tts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "f5_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_multitts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "multitts")).style(switch_internal_css)
                         switch_webui_show_card_tts_melotts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "melotts")).style(switch_internal_css)
-                        
+                        switch_webui_show_card_tts_index_tts = ui.switch('Index-TTS', value=config.get("webui", "show_card", "tts", "index_tts")).style(switch_internal_css)
                         
                 with ui.card().style(card_css):
                     ui.label("变声")

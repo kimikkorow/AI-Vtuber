@@ -1365,3 +1365,50 @@ class MY_TTS:
             logger.error(f'MeloTTS未知错误，请检查您的MeloTTS 接口服务是否启动/配置/网络是否正确，报错内容: {e}')
         
         return None
+
+    # Index-tts
+    async def index_tts_api(self, data):
+        """Index-tts API对接喵
+
+        Args:
+            data (dict): 传参数据喵
+
+        Returns:
+            str: 音频路径
+        """
+        try:
+            url = f"{data['index_tts']['api_ip_port']}/tts"
+            
+            # 创建FormData对象用于multipart/form-data请求
+            from aiohttp import FormData
+            form_data = FormData()
+            
+            # 添加文本参数
+            form_data.add_field('text', data["content"])
+            
+            # 添加温度参数
+            form_data.add_field('temperature', str(data['index_tts']["temperature"]))
+            
+            # 添加音频文件
+            form_data.add_field(
+                'prompt_audio',
+                open(data['index_tts']["prompt_audio"], 'rb'),
+                filename=os.path.basename(data['index_tts']["prompt_audio"]),
+                content_type='audio/wav'
+            )
+            
+            logger.debug(f"Index-tts 请求参数: text={data['content']}, temperature={data['index_tts']['temperature']}")
+            
+            try:
+                return await self.download_audio("index_tts", url, self.timeout, request_type="post", data=form_data)
+            except Exception as e:
+                logger.error(traceback.format_exc())
+                logger.error(f'Index-tts API 错误，请检查您的 Index-tts API 是否启动/配置是否正确，报错内容: {e}')
+
+            return None
+            
+        except Exception as e:
+            logger.error(traceback.format_exc())
+            logger.error(f'Index-tts未知错误，请检查您的Index-tts API是否启动/配置是否正确，报错内容: {e}')
+        
+        return None
