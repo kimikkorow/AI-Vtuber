@@ -981,6 +981,11 @@
     "noise_scale_w": 0.8,
     "speed": 1
   },
+  "index_tts": {
+    "api_ip_port": "http://127.0.0.1:6008",
+    "prompt_audio": "C://Users//Administrator//Music//光动嘴不如亲自做给你看.wav",
+    "temperature": 0.8
+  },
   "choose_song": {
     "enable": false,
     "similarity": 0.5,
@@ -2049,7 +2054,8 @@
         "cosyvoice": true,
         "f5_tts": true,
         "multitts": true,
-        "melotts": true
+        "melotts": true,
+        "index_tts": true
       },
       "svc": {
         "ddsp_svc": true,
