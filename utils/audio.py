@@ -1079,16 +1079,7 @@ class Audio:
                 }
 
                 voice_tmp_path = self.my_tts.azure_tts_api(data) 
-            elif message["tts_type"] == "fish_speech":
-                data = message["data"]
-
-                if data["type"] == "web":
-                    data["web"]["content"] = message["content"]
-                    voice_tmp_path = await self.my_tts.fish_speech_web_api(data["web"])
-                else:
-                    data["tts_config"]["text"] = message["content"]
-                    data["api_1.1.0"]["text"] = message["content"]
-                    voice_tmp_path = await self.my_tts.fish_speech_api(data)
+            
             elif message["tts_type"] == "chattts":
                 logger.info(message)
                 data = {
@@ -2040,18 +2031,7 @@ class Audio:
             logger.debug(f"data={data}")
 
             voice_tmp_path = self.my_tts.azure_tts_api(data) 
-        elif audio_synthesis_type == "fish_speech":
-            data = self.config.get("fish_speech")
-
-            if data["type"] == "web":
-                data["web"]["content"] = content
-                logger.debug(f"data={data}")
-                voice_tmp_path = await self.my_tts.fish_speech_web_api(data["web"])
-            else:
-                data["tts_config"]["text"] = content
-                data["api_1.1.0"]["text"] = content
-                logger.debug(f"data={data}")
-                voice_tmp_path = await self.my_tts.fish_speech_api(data)
+        
         elif audio_synthesis_type == "chattts":
             data = {
                 "type": self.config.get("chattts", "type"),
