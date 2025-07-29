@@ -2668,14 +2668,7 @@ def goto_func_page():
                             "emotion": (input_gpt_sovits_webtts_emotion, 'str'),
                         }
                     }
-                if config.get("webui", "show_card", "tts", "clone_voice"):
-                    config_mapping["clone_voice"] = {
-                        "type": (select_clone_voice_type, 'str'),
-                        "api_ip_port": (input_clone_voice_api_ip_port, 'str'),
-                        "voice": (input_clone_voice_voice, 'str'),
-                        "language": (select_clone_voice_language, 'str'),
-                        "speed": (input_clone_voice_speed, 'float'),
-                    }
+
                 if config.get("webui", "show_card", "tts", "azure_tts"):
                     config_mapping["azure_tts"] = {
                         "subscription_key": (input_azure_tts_subscription_key, 'str'),
@@ -3253,7 +3246,6 @@ def goto_func_page():
                                 "openai_tts": (switch_webui_show_card_tts_openai_tts, 'bool'),
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
                                 "gpt_sovits": (switch_webui_show_card_tts_gpt_sovits, 'bool'),
-                                "clone_voice": (switch_webui_show_card_tts_clone_voice, 'bool'),
                                 "azure_tts": (switch_webui_show_card_tts_azure_tts, 'bool'),
                                 "fish_speech": (switch_webui_show_card_tts_fish_speech, 'bool'),
                                 "chattts": (switch_webui_show_card_tts_chattts, 'bool'),
@@ -3398,7 +3390,6 @@ def goto_func_page():
         'openai_tts': 'OpenAI TTS',
         'gradio_tts': 'Gradio',
         'gpt_sovits': 'GPT_SoVITS',
-        'clone_voice': 'clone-voice',
         'azure_tts': 'azure_tts',
         'fish_speech': 'fish_speech',
         'chattts': 'ChatTTS',
@@ -5722,32 +5713,6 @@ def goto_func_page():
                             input_gpt_sovits_webtts_speed = ui.input(label='语速', value=config.get("gpt_sovits", "webtts", "speed"), placeholder='语速').style("width:100px;")
                             input_gpt_sovits_webtts_emotion = ui.input(label='情感', value=config.get("gpt_sovits", "webtts", "emotion"), placeholder='情感').style("width:100px;")
         
-            if config.get("webui", "show_card", "tts", "clone_voice"): 
-                with ui.card().style(card_css):
-                    ui.label("clone-voice")
-                    with ui.row():
-                        select_clone_voice_type = ui.select(
-                            label='API接口类型', 
-                            options={'tts':'tts'}, 
-                            value=config.get("clone_voice", "type")
-                        ).style("width:100px;")
-                        input_clone_voice_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("clone_voice", "api_ip_port"), 
-                            placeholder='官方程序启动后监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;")
-                    with ui.row():
-                        input_clone_voice_voice = ui.input(label='参考音频路径', value=config.get("clone_voice", "voice"), placeholder='参考音频路径，建议填绝对路径').style("width:200px;")
-                        select_clone_voice_language = ui.select(
-                            label='需要合成的语种', 
-                            options={'zh-cn':'中文', 'ja':'日文', 'en':'英文',"ko":'ko',"es":'es',"de":'de',
-                                     "fr":'fr',"it":'it',"tr":'tr',"ru":'ru',"pt":'pt',"pl":'pl',"nl":'nl',"ar":'ar',"hu":'hu',"cs":'cs'}, 
-                            value=config.get("clone_voice", "language")
-                        ).style("width:200px;")
-                        input_clone_voice_speed = ui.input(label='语速', value=config.get("clone_voice", "speed"), placeholder='语速').style("width:100px;")
             
             if config.get("webui", "show_card", "tts", "azure_tts"): 
                 with ui.card().style(card_css):
@@ -7214,7 +7179,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_openai_tts = ui.switch('openai_tts', value=config.get("webui", "show_card", "tts", "openai_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gpt_sovits = ui.switch('gpt_sovits', value=config.get("webui", "show_card", "tts", "gpt_sovits")).style(switch_internal_css)
-                        switch_webui_show_card_tts_clone_voice = ui.switch('clone_voice', value=config.get("webui", "show_card", "tts", "clone_voice")).style(switch_internal_css)
                         switch_webui_show_card_tts_azure_tts = ui.switch('azure_tts', value=config.get("webui", "show_card", "tts", "azure_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_fish_speech = ui.switch('fish_speech', value=config.get("webui", "show_card", "tts", "fish_speech")).style(switch_internal_css)
                         switch_webui_show_card_tts_chattts = ui.switch('ChatTTS', value=config.get("webui", "show_card", "tts", "chattts")).style(switch_internal_css)

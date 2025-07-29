@@ -641,39 +641,6 @@ class MY_TTS:
         return None
 
 
-    async def clone_voice_api(self, data):
-        API_URL = urljoin(data["api_ip_port"], '/tts')
-
-        # voice=cn-nan.wav&text=%E4%BD%A0%E5%A5%BD&language=zh-cn&speed=1
-        params = {
-            "voice": data["voice"],
-            "language": data["language"],
-            "speed": data["speed"],
-            "text": data["content"]
-        }
-
-        logger.debug(f"params={params}")
-
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(API_URL, data=params) as response:
-                    ret = await response.json()
-                    logger.debug(ret)
-
-                    file_path = ret["filename"]
-
-                    return file_path
-
-        except aiohttp.ClientError as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'clone_voice请求失败: {e}')
-        except Exception as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'clone_voice未知错误: {e}')
-        
-        return None
-
-
     def azure_tts_api(self, data):
         """调用Azure TTS API合成音频返回音频路径
 
