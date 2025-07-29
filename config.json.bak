@@ -503,18 +503,6 @@
     "history_enable": true,
     "history_max_len": 4096
   },
-  "qanything": {
-    "type": "online",
-    "app_key": "",
-    "app_secret": "",
-    "api_ip_port": "http://127.0.0.1:8777",
-    "user_id": "zzp",
-    "kb_ids": [
-      "KB938fb10c8a924530abf1754ea620b7cd"
-    ],
-    "history_enable": true,
-    "history_max_len": 300
-  },
   "koboldcpp": {
     "api_ip_port": "http://127.0.0.1:5001",
     "max_context_length": 2048,
@@ -1995,7 +1983,6 @@
         "tongyixingchen": true,
         "my_wenxinworkshop": true,
         "gemini": true,
-        "qanything": true,
         "koboldcpp": true,
         "anythingllm": true,
         "gpt4free": true,

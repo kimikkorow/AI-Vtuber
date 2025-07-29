@@ -2431,17 +2431,7 @@ def goto_func_page():
                         "top_p": (input_gemini_top_p, 'float'),
                         "top_k": (input_gemini_top_k, 'int'),
                     }
-                if config.get("webui", "show_card", "llm", "qanything"):
-                    config_mapping["qanything"] = {
-                        "type": (select_qanything_type, 'str'),
-                        "app_key": (input_qanything_app_key, 'str'),
-                        "app_secret": (input_qanything_app_secret, 'str'),
-                        "api_ip_port": (input_qanything_api_ip_port, 'str'),
-                        "user_id": (input_qanything_user_id, 'str'),
-                        "kb_ids": (textarea_qanything_kb_ids, 'textarea'),  
-                        "history_enable": (switch_qanything_history_enable, 'bool'),
-                        "history_max_len": (input_qanything_history_max_len, 'int'),
-                    }
+                
                 if config.get("webui", "show_card", "llm", "koboldcpp"):
                     config_mapping["koboldcpp"] = {
                         "api_ip_port": (input_koboldcpp_api_ip_port, 'str'),
@@ -3291,7 +3281,6 @@ def goto_func_page():
                                 "tongyixingchen": (switch_webui_show_card_llm_tongyixingchen, 'bool'),
                                 "my_wenxinworkshop": (switch_webui_show_card_llm_my_wenxinworkshop, 'bool'),
                                 "gemini": (switch_webui_show_card_llm_gemini, 'bool'),
-                                "qanything": (switch_webui_show_card_llm_qanything, 'bool'),
                                 "koboldcpp": (switch_webui_show_card_llm_koboldcpp, 'bool'),
                                 "anythingllm": (switch_webui_show_card_llm_anythingllm, 'bool'),
                                 "gpt4free": (switch_webui_show_card_llm_gpt4free, 'bool'),
@@ -3490,7 +3479,6 @@ def goto_func_page():
         'tongyixingchen': '通义星尘',
         'my_wenxinworkshop': '千帆大模型',
         'gemini': 'Gemini',
-        'qanything': 'QAnything',
         'koboldcpp': 'koboldcpp',
         'anythingllm': 'AnythingLLM',
         'tongyi': '通义千问/阿里云百炼',
@@ -5014,32 +5002,7 @@ def goto_func_page():
                         input_gemini_top_p = ui.input(label='top_p', value=config.get("gemini", "top_p"), placeholder='在抽样时考虑的标记的最大累积概率。根据其分配的概率对标记进行排序，以仅考虑最可能的标记。Top-k采样直接限制要考虑的标记的最大数量，而Nucleus采样则基于累积概率限制标记的数量。')
                         input_gemini_top_k = ui.input(label='top_k', value=config.get("gemini", "top_k"), placeholder='在抽样时考虑的标记的最大数量。Top-k采样考虑一组top_k最有可能的标记。默认值为40。')
 
-            if config.get("webui", "show_card", "llm", "qanything"):
-                with ui.card().style(card_css):
-                    ui.label("QAnything")
-                    with ui.row():
-                        select_qanything_type = ui.select(
-                            label='类型', 
-                            options={'online': '在线API', 'local': '本地API'}, 
-                            value=config.get("qanything", "type")
-                        ).style("width:200px")
-                        input_qanything_app_key = ui.input(label='应用ID', value=config.get("qanything", "app_key"), placeholder='在线平台 应用ID')
-                        input_qanything_app_secret = ui.input(label='密钥', value=config.get("qanything", "app_secret"), placeholder='在线平台 密钥')
-                        
-                        input_qanything_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("qanything", "api_ip_port"), 
-                            placeholder='qanything启动后API监听的ip端口地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                    with ui.row():
-                        input_qanything_user_id = ui.input(label='用户ID', value=config.get("qanything", "user_id"), placeholder='用户ID，默认的就是 zzp')
-                        textarea_qanything_kb_ids = ui.textarea(label='知识库ID', placeholder='知识库ID，启动时会自动检索输出日志', value=textarea_data_change(config.get("qanything", "kb_ids"))).style("width:300px;")
-                        switch_qanything_history_enable = ui.switch('上下文记忆', value=config.get("qanything", "history_enable")).style(switch_internal_css)
-                        input_qanything_history_max_len = ui.input(label='最大记忆长度', value=config.get("qanything", "history_max_len"), placeholder='最长能记忆的问答字符串长度，超长会丢弃最早记忆的内容，请慎用！配置过大可能会有丢大米')
-
+            
             if config.get("webui", "show_card", "llm", "koboldcpp"):
                 with ui.card().style(card_css):
                     ui.label("koboldcpp")
@@ -7426,7 +7389,6 @@ def goto_func_page():
                         # switch_webui_show_card_llm_my_qianfan = ui.switch('my_qianfan', value=config.get("webui", "show_card", "llm", "my_qianfan")).style(switch_internal_css)
                         switch_webui_show_card_llm_my_wenxinworkshop = ui.switch('千帆大模型', value=config.get("webui", "show_card", "llm", "my_wenxinworkshop")).style(switch_internal_css)
                         switch_webui_show_card_llm_gemini = ui.switch('gemini', value=config.get("webui", "show_card", "llm", "gemini")).style(switch_internal_css)
-                        switch_webui_show_card_llm_qanything = ui.switch('qanything', value=config.get("webui", "show_card", "llm", "qanything")).style(switch_internal_css)
                         switch_webui_show_card_llm_koboldcpp = ui.switch('koboldcpp', value=config.get("webui", "show_card", "llm", "koboldcpp")).style(switch_internal_css)
                         switch_webui_show_card_llm_anythingllm = ui.switch('AnythingLLM', value=config.get("webui", "show_card", "llm", "anythingllm")).style(switch_internal_css)
                         switch_webui_show_card_llm_gpt4free = ui.switch('GPT4Free', value=config.get("webui", "show_card", "llm", "gpt4free")).style(switch_internal_css)

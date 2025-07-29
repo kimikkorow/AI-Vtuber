@@ -159,7 +159,6 @@ class My_handle(metaclass=SingletonMeta):
             self.my_qianfan = None
             self.my_wenxinworkshop = None
             self.gemini = None
-            self.qanything = None
             self.koboldcpp = None
             self.anythingllm = None
             self.gpt4free = None
@@ -172,7 +171,7 @@ class My_handle(metaclass=SingletonMeta):
 
             self.chat_type_list = ["chatgpt", "claude", "claude2", "chat_with_file", "text_generation_webui", \
                     "sparkdesk",  "langchain_chatchat", "zhipu", "bard", "tongyi", \
-                    "tongyixingchen", "my_qianfan", "my_wenxinworkshop", "gemini", "qanything", "koboldcpp", "anythingllm", "gpt4free", \
+                    "tongyixingchen", "my_qianfan", "my_wenxinworkshop", "gemini", "koboldcpp", "anythingllm", "gpt4free", \
                     "custom_llm", "llm_tpu", "dify", "volcengine"]
 
             # 配置加载
@@ -1582,7 +1581,6 @@ class My_handle(metaclass=SingletonMeta):
                     "my_qianfan": lambda: self.my_qianfan.get_resp(data["content"]),
                     "my_wenxinworkshop": lambda: self.my_wenxinworkshop.get_resp(data["content"]),
                     "gemini": lambda: self.gemini.get_resp(data["content"]),
-                    "qanything": lambda: self.qanything.get_resp({"prompt": data["content"]}),
                     "koboldcpp": lambda: self.koboldcpp.get_resp({"prompt": data["content"]}),
                     "anythingllm": lambda: self.anythingllm.get_resp({"prompt": data["content"]}),
                     "gpt4free": lambda: self.gpt4free.get_resp({"prompt": data["content"]}),
