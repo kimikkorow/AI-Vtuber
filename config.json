@@ -744,78 +744,6 @@
     "region": "japanwest",
     "voice_name": "zh-CN-XiaoyanNeural"
   },
-  "fish_speech": {
-    "type": "web",
-    "api_ip_port": "http://127.0.0.1:8001",
-    "model_name": "default",
-    "model_config": {
-      "device": "cuda",
-      "llama": {
-        "config_name": "text2semantic_finetune",
-        "checkpoint_path": "checkpoints/text2semantic-400m-v0.2-4k.pth",
-        "precision": "bfloat16",
-        "tokenizer": "fishaudio/speech-lm-v1",
-        "compile": true
-      },
-      "vqgan": {
-        "config_name": "vqgan_pretrain",
-        "checkpoint_path": "checkpoints/vqgan-v1.pth"
-      }
-    },
-    "tts_config": {
-      "prompt_text": "",
-      "prompt_tokens": "",
-      "max_new_tokens": 0,
-      "top_k": 3,
-      "top_p": 0.5,
-      "repetition_penalty": 1.5,
-      "temperature": 0.7,
-      "order": "zh,jp,en",
-      "use_g2p": true,
-      "seed": 1,
-      "speaker": ""
-    },
-    "web": {
-      "enable_ref_audio": true,
-      "ref_audio_path": "/tmp/gradio/18e6fd9a7ff4169adfb76f5602ced08042a6be93/audio.wav",
-      "ref_text": "…不行，我必须去救他！",
-      "maximum_tokens_per_batch": 0,
-      "iterative_prompt_length": 48,
-      "top_p": 0.7,
-      "repetition_penalty": 1.5,
-      "temperature": 0.7,
-      "speaker": "神里绫华_ZH",
-      "enable_ref_audio_update": true
-    },
-    "api_1.1.0": {
-      "reference_text": "",
-      "reference_audio": "",
-      "max_new_tokens": 0,
-      "chunk_length": 30,
-      "top_p": 0.7,
-      "repetition_penalty": 1.5,
-      "temperature": 0.7,
-      "speaker": "",
-      "format": "wav",
-      "streaming": false
-    }
-  },
-  "chattts": {
-    "type": "gradio_0621",
-    "api_ip_port": "http://127.0.0.1:9880",
-    "gradio_ip_port": "http://127.0.0.1:8080",
-    "temperature": 0.3,
-    "audio_seed_input": 2,
-    "top_p": 0.7,
-    "top_k": 20,
-    "text_seed_input": 42,
-    "refine_text_flag": true,
-    "api": {
-      "media_type": "wav",
-      "seed": 2581,
-      "streaming": 0
-    }
-  },
   "cosyvoice": {
     "type": "gradio_0707",
     "gradio_ip_port": "http://127.0.0.1:9886",
@@ -1919,8 +1847,6 @@
         "gradio_tts": true,
         "gpt_sovits": true,
         "azure_tts": true,
-        "fish_speech": true,
-        "chattts": true,
         "cosyvoice": true,
         "f5_tts": true,
         "multitts": true,

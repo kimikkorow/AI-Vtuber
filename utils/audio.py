@@ -1079,33 +1079,7 @@ class Audio:
                 }
 
                 voice_tmp_path = self.my_tts.azure_tts_api(data) 
-            elif message["tts_type"] == "fish_speech":
-                data = message["data"]
-
-                if data["type"] == "web":
-                    data["web"]["content"] = message["content"]
-                    voice_tmp_path = await self.my_tts.fish_speech_web_api(data["web"])
-                else:
-                    data["tts_config"]["text"] = message["content"]
-                    data["api_1.1.0"]["text"] = message["content"]
-                    voice_tmp_path = await self.my_tts.fish_speech_api(data)
-            elif message["tts_type"] == "chattts":
-                logger.info(message)
-                data = {
-                    "type": message["data"]["type"],
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "gradio_ip_port": message["data"]["gradio_ip_port"],
-                    "top_p": message["data"]["top_p"],
-                    "top_k": message["data"]["top_k"],
-                    "temperature": message["data"]["temperature"],
-                    "text_seed_input": message["data"]["text_seed_input"],
-                    "audio_seed_input": message["data"]["audio_seed_input"],
-                    "refine_text_flag": message["data"]["refine_text_flag"],
-                    "content": message["content"],
-                    "api": message["data"]["api"],
-                }
-
-                voice_tmp_path = await self.my_tts.chattts_api(data)  
+            
             elif message["tts_type"] == "cosyvoice":
                 logger.debug(message)
                 data = {
@@ -2040,34 +2014,7 @@ class Audio:
             logger.debug(f"data={data}")
 
             voice_tmp_path = self.my_tts.azure_tts_api(data) 
-        elif audio_synthesis_type == "fish_speech":
-            data = self.config.get("fish_speech")
-
-            if data["type"] == "web":
-                data["web"]["content"] = content
-                logger.debug(f"data={data}")
-                voice_tmp_path = await self.my_tts.fish_speech_web_api(data["web"])
-            else:
-                data["tts_config"]["text"] = content
-                data["api_1.1.0"]["text"] = content
-                logger.debug(f"data={data}")
-                voice_tmp_path = await self.my_tts.fish_speech_api(data)
-        elif audio_synthesis_type == "chattts":
-            data = {
-                "type": self.config.get("chattts", "type"),
-                "api_ip_port": self.config.get("chattts", "api_ip_port"),
-                "gradio_ip_port": self.config.get("chattts", "gradio_ip_port"),
-                "temperature": self.config.get("chattts", "temperature"),
-                "audio_seed_input": self.config.get("chattts", "audio_seed_input"),
-                "top_p": self.config.get("chattts", "top_p"),
-                "top_k": self.config.get("chattts", "top_k"),
-                "text_seed_input": self.config.get("chattts", "text_seed_input"),
-                "refine_text_flag": self.config.get("chattts", "refine_text_flag"),
-                "api": self.config.get("chattts", "api"),
-                "content": content
-            }
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.chattts_api(data)
+        
         elif audio_synthesis_type == "cosyvoice":
             data = {
                 "type": self.config.get("cosyvoice", "type"),

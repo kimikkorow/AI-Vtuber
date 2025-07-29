@@ -945,25 +945,7 @@ def goto_func_page():
             return CommonResult(code=-1, message=f"get_sys_info处理失败！{e}")
 
 
-    # fish speech 获取说话人数据
-    async def fish_speech_web_get_ref_data(speaker):
-        if speaker == "":
-            logger.info("说话人不能为空喵~")
-            ui.notify(position="top", type="warning", message="说话人不能为空喵~")
-            return
-
-        from utils.audio_handle.my_tts import MY_TTS
-        
-        my_tts = MY_TTS(config_path)
-        data_json = await my_tts.fish_speech_web_get_ref_data(speaker)
-        if data_json is None:
-            ui.notify(position="top", type="negative", message="获取数据失败，请查看日志定位问题")
-            return
-        
-        input_fish_speech_web_ref_audio_path.value = data_json["ref_audio_path"]
-        input_fish_speech_web_ref_text.value = data_json["ref_text"]
-        ui.notify(position="top", type="positive", message="获取数据成功，已自动填入输入框")
-
+    
         
     """
                                                      ./@\]                    
@@ -2675,78 +2657,6 @@ def goto_func_page():
                         "region": (input_azure_tts_region, 'str'),
                         "voice_name": (input_azure_tts_voice_name, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "fish_speech"):
-                    config_mapping["fish_speech"] = {
-                        "type": (select_fish_speech_type, 'str'),
-                        "api_ip_port": (input_fish_speech_api_ip_port, 'str'),
-                        "model_name": (input_fish_speech_model_name, 'str'),
-                        "model_config": {
-                            "device": (input_fish_speech_model_config_device, 'str'),
-                            "llama": {
-                                "config_name": (input_fish_speech_model_config_llama_config_name, 'str'),
-                                "checkpoint_path": (input_fish_speech_model_config_llama_checkpoint_path, 'str'),
-                                "precision": (input_fish_speech_model_config_llama_precision, 'str'),
-                                "tokenizer": (input_fish_speech_model_config_llama_tokenizer, 'str'),
-                                "compile": (switch_fish_speech_model_config_llama_compile, 'bool'),
-                            },
-                            "vqgan": {
-                                "config_name": (input_fish_speech_model_config_vqgan_config_name, 'str'),
-                                "checkpoint_path": (input_fish_speech_model_config_vqgan_checkpoint_path, 'str'),
-                            },
-                        },
-                        "tts_config": {
-                            "prompt_text": (input_fish_speech_tts_config_prompt_text, 'str'),
-                            "prompt_tokens": (input_fish_speech_tts_config_prompt_tokens, 'str'),
-                            "max_new_tokens": (input_fish_speech_tts_config_max_new_tokens, 'int'),
-                            "top_k": (input_fish_speech_tts_config_top_k, 'int'),
-                            "top_p": (input_fish_speech_tts_config_top_p, 'float'),
-                            "repetition_penalty": (input_fish_speech_tts_config_repetition_penalty, 'float'),
-                            "temperature": (input_fish_speech_tts_config_temperature, 'float'),
-                            "order": (input_fish_speech_tts_config_order, 'str'),
-                            "seed": (input_fish_speech_tts_config_seed, 'int'),
-                            "speaker": (input_fish_speech_tts_config_speaker, 'str'),
-                            "use_g2p": (switch_fish_speech_tts_config_use_g2p, 'bool'),
-                        },
-                        "api_1.1.0": {
-                            "reference_text": (input_fish_speech_api_1_1_0_reference_text, 'str'),
-                            "reference_audio": (input_fish_speech_api_1_1_0_reference_audio, 'str'),
-                            "max_new_tokens": (input_fish_speech_api_1_1_0_max_new_tokens, 'int'),
-                            "chunk_length": (input_fish_speech_api_1_1_0_chunk_length, 'int'),
-                            "top_p": (input_fish_speech_api_1_1_0_top_p, 'float'),
-                            "repetition_penalty": (input_fish_speech_api_1_1_0_repetition_penalty, 'float'),
-                            "temperature": (input_fish_speech_api_1_1_0_temperature, 'float'),
-                            "speaker": (input_fish_speech_api_1_1_0_speaker, 'str'),
-                            "format": (input_fish_speech_api_1_1_0_format, 'str'),
-                        },
-                        "web": {
-                            "speaker": (input_fish_speech_web_speaker, 'str'),
-                            "enable_ref_audio": (switch_fish_speech_web_enable_ref_audio, 'bool'),
-                            "ref_audio_path": (input_fish_speech_web_ref_audio_path, 'str'),
-                            "ref_text": (input_fish_speech_web_ref_text, 'str'),
-                            "enable_ref_audio_update": (switch_fish_speech_enable_ref_audio_update, 'bool'),
-                            "maximum_tokens_per_batch": (input_fish_speech_web_maximum_tokens_per_batch, 'int'),
-                            "iterative_prompt_length": (input_fish_speech_web_iterative_prompt_length, 'int'),
-                            "temperature": (input_fish_speech_web_temperature, 'float'),
-                            "top_p": (input_fish_speech_web_top_p, 'float'),
-                            "repetition_penalty": (input_fish_speech_web_repetition_penalty, 'float'),
-                        },
-                    }
-                if config.get("webui", "show_card", "tts", "chattts"):
-                    config_mapping["chattts"] = {
-                        "type": (select_chattts_type, 'str'),
-                        "api_ip_port": (input_chattts_api_ip_port, 'str'),
-                        "gradio_ip_port": (input_chattts_gradio_ip_port, 'str'),
-                        "temperature": (input_chattts_temperature, 'float'),
-                        "audio_seed_input": (input_chattts_audio_seed_input, 'int'),
-                        "top_p": (input_chattts_top_p, 'float'),
-                        "top_k": (input_chattts_top_k, 'int'),
-                        "text_seed_input": (input_chattts_text_seed_input, 'int'),
-                        "refine_text_flag": (switch_chattts_refine_text_flag, 'bool'),
-                        "api": {
-                            "seed": (input_chattts_api_seed, 'int'),
-                            "media_type": (input_chattts_api_media_type, 'str'),
-                        },
-                    }
                 if config.get("webui", "show_card", "tts", "cosyvoice"):
                     config_mapping["cosyvoice"] = {
                         "type": (select_cosyvoice_type, 'str'),
@@ -3247,8 +3157,6 @@ def goto_func_page():
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
                                 "gpt_sovits": (switch_webui_show_card_tts_gpt_sovits, 'bool'),
                                 "azure_tts": (switch_webui_show_card_tts_azure_tts, 'bool'),
-                                "fish_speech": (switch_webui_show_card_tts_fish_speech, 'bool'),
-                                "chattts": (switch_webui_show_card_tts_chattts, 'bool'),
                                 "cosyvoice": (switch_webui_show_card_tts_cosyvoice, 'bool'),
                                 "f5_tts": (switch_webui_show_card_tts_f5_tts, 'bool'),
                                 "multitts": (switch_webui_show_card_tts_multitts, 'bool'),
@@ -3391,8 +3299,6 @@ def goto_func_page():
         'gradio_tts': 'Gradio',
         'gpt_sovits': 'GPT_SoVITS',
         'azure_tts': 'azure_tts',
-        'fish_speech': 'fish_speech',
-        'chattts': 'ChatTTS',
         'cosyvoice': 'CosyVoice',
         'f5_tts': 'F5-TTS',
         'multitts': 'MultiTTS',
@@ -5722,155 +5628,7 @@ def goto_func_page():
                         input_azure_tts_region = ui.input(label='区域', value=config.get("azure_tts", "region"), placeholder='申请开通服务后，自然就看见了').style("width:200px;")
                         input_azure_tts_voice_name = ui.input(label='说话人名', value=config.get("azure_tts", "voice_name"), placeholder='Speech Studio平台试听获取说话人名').style("width:200px;")
             
-            if config.get("webui", "show_card", "tts", "fish_speech"): 
-                with ui.card().style(card_css):
-                    ui.label("fish_speech")
-                    with ui.row():
-                        select_fish_speech_type = ui.select(
-                            label='类型', 
-                            options={'api_1.1.0':'api_1.1.0', "web":'在线web', 'api_0.2.0':'api_0.2.0'}, 
-                            value=config.get("fish_speech", "type")
-                        ).style("width:200px;")
-                        input_fish_speech_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("fish_speech", "api_ip_port"), 
-                            placeholder='程序启动后监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;")
-                    with ui.expansion('API_1.1.0', icon="settings", value=True).classes('w-full'):
-                        with ui.row():
-                            input_fish_speech_api_1_1_0_reference_text = ui.input(label='参考文本', value=config.get("fish_speech", "api_1.1.0", "reference_text"), placeholder='参考文本').style("width:200px;")
-                            input_fish_speech_api_1_1_0_reference_audio = ui.input(label='参考音频路径', value=config.get("fish_speech", "api_1.1.0", "reference_audio"), placeholder='参考音频路径').style("width:200px;")
-                            input_fish_speech_api_1_1_0_max_new_tokens = ui.input(label='每批最大令牌数', value=config.get("fish_speech", "api_1.1.0", "max_new_tokens"), placeholder='每批最大令牌数').style("width:200px;")
-                            input_fish_speech_api_1_1_0_chunk_length = ui.input(label='chunk_length', value=config.get("fish_speech", "api_1.1.0", "chunk_length"), placeholder='迭代提示长度').style("width:200px;")
-                            input_fish_speech_api_1_1_0_top_p = ui.input(label='top_p', value=config.get("fish_speech", "api_1.1.0", "top_p"), placeholder='自行查阅').style("width:200px;")
-                        with ui.row():
-                            input_fish_speech_api_1_1_0_repetition_penalty = ui.input(label='重复惩罚', value=config.get("fish_speech", "api_1.1.0", "repetition_penalty"), placeholder='重复惩罚').style("width:200px;")
-                            input_fish_speech_api_1_1_0_temperature = ui.input(label='temperature', value=config.get("fish_speech", "api_1.1.0", "temperature"), placeholder='自行查阅').style("width:200px;")
-                            input_fish_speech_api_1_1_0_speaker = ui.input(label='说话人', value=config.get("fish_speech", "api_1.1.0", "speaker"), placeholder='说话人名').style("width:200px;")
-                            input_fish_speech_api_1_1_0_format = ui.input(label='音频格式', value=config.get("fish_speech", "api_1.1.0", "format"), placeholder='音频格式').style("width:200px;")
-                            
-                    with ui.expansion('在线Web配置', icon="settings", value=True).classes('w-full'):
-                        with ui.row():
-                            input_fish_speech_web_speaker = ui.input(label='speaker', value=config.get("fish_speech", "web", "speaker"), placeholder='说话人，请从web复制说话人的完整名称').style("width:200px;")
-                            switch_fish_speech_web_enable_ref_audio = ui.switch('启用参考音频', value=config.get("fish_speech", "web", "enable_ref_audio")).style(switch_internal_css)
-                            input_fish_speech_web_ref_audio_path = ui.input(label='参考音频路径（云端）', value=config.get("fish_speech", "web", "ref_audio_path"), placeholder='抓wss包，查看参考音频的云端绝对路径').style("width:300px;")
-                            input_fish_speech_web_ref_text = ui.input(label='参考音频文本', value=config.get("fish_speech", "web", "ref_text"), placeholder='参考音频文本').style("width:300px;")
-                            switch_fish_speech_enable_ref_audio_update = ui.switch('参考音频过期自动更新', value=config.get("fish_speech", "web", "enable_ref_audio_update")).style(switch_internal_css)
-                        
-                            button_fish_speech_web_get_ref_data = ui.button('随机获取参考音频&文本', on_click=lambda: fish_speech_web_get_ref_data(input_fish_speech_web_speaker.value), color=button_internal_color).style(button_internal_css)
-
-                        with ui.row():
-                            input_fish_speech_web_maximum_tokens_per_batch = ui.input(label='maximum_tokens_per_batch', value=config.get("fish_speech", "web", "maximum_tokens_per_batch"), placeholder='自行查阅').style("width:200px;")
-                            input_fish_speech_web_iterative_prompt_length = ui.input(label='iterative_prompt_length', value=config.get("fish_speech", "web", "iterative_prompt_length"), placeholder='自行查阅').style("width:200px;")
-                            input_fish_speech_web_temperature = ui.input(label='temperature', value=config.get("fish_speech", "web", "temperature"), placeholder='自行查阅').style("width:200px;")
-                            input_fish_speech_web_top_p = ui.input(label='top_p', value=config.get("fish_speech", "web", "top_p"), placeholder='自行查阅').style("width:200px;")
-                            input_fish_speech_web_repetition_penalty = ui.input(label='repetition_penalty', value=config.get("fish_speech", "web", "repetition_penalty"), placeholder='自行查阅').style("width:200px;")
-                    with ui.expansion('API_0.2.0', icon="settings", value=False).classes('w-full'):
-                        input_fish_speech_model_name = ui.input(label='模型名', value=config.get("fish_speech", "model_name"), placeholder='需要加载的模型名').style("width:200px;")
-                        
-                        async def fish_speech_load_model(data):
-                            import aiohttp
-
-                            ui.notify(position="top", type="info", message=f'fish_speech 准备加载模型：{data["model_name"]}')
-
-                            API_URL = urljoin(data["api_ip_port"], f'/v1/models/{data["model_name"]}')
-
-                            try:
-                                async with aiohttp.ClientSession() as session:
-                                    async with session.put(API_URL, json=data["model_config"]) as response:
-                                        if response.status == 200:
-                                            ret = await response.json()
-                                            logger.debug(ret)
-
-                                            if ret["name"] == data["model_name"]:
-                                                logger.info(f'fish_speech模型加载成功: {ret["name"]}')
-                                                ui.notify(position="top", type="positive", message=f'fish_speech模型加载成功: {ret["name"]}')
-                                                return ret
-                                        else: 
-                                            logger.error(f'fish_speech模型加载失败')
-                                            ui.notify(position="top", type="negative", message=f'fish_speech模型加载失败')
-                                            return None
-
-                            except aiohttp.ClientError as e:
-                                logger.error(f'fish_speech请求失败: {e}')
-                                ui.notify(position="top", type="negative", message=f'fish_speech请求失败: {e}')
-                            except Exception as e:
-                                logger.error(f'fish_speech未知错误: {e}')
-                                ui.notify(position="top", type="negative", message=f'fish_speech未知错误: {e}')
-                            
-                            return None
-
-                        button_fish_speech_load_model = ui.button('加载模型', on_click=lambda: fish_speech_load_model(config.get("fish_speech")), color=button_internal_color).style(button_internal_css)
-                    
-                        with ui.card().style(card_css):
-                            ui.label("模型配置")
-                            with ui.row():
-                                input_fish_speech_model_config_device = ui.input(label='device', value=config.get("fish_speech", "model_config", "device"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_model_config_llama_config_name = ui.input(label='config_name', value=config.get("fish_speech", "model_config", "llama", "config_name"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_model_config_llama_checkpoint_path = ui.input(label='checkpoint_path', value=config.get("fish_speech", "model_config", "llama", "checkpoint_path"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_model_config_llama_precision = ui.input(label='precision', value=config.get("fish_speech", "model_config", "llama", "precision"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_model_config_llama_tokenizer = ui.input(label='tokenizer', value=config.get("fish_speech", "model_config", "llama", "tokenizer"), placeholder='自行查阅').style("width:200px;")
-                                switch_fish_speech_model_config_llama_compile = ui.switch('compile', value=config.get("fish_speech", "model_config", "llama", "compile")).style(switch_internal_css)
-
-                                input_fish_speech_model_config_vqgan_config_name = ui.input(label='config_name', value=config.get("fish_speech", "model_config", "vqgan", "config_name"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_model_config_vqgan_checkpoint_path = ui.input(label='checkpoint_path', value=config.get("fish_speech", "model_config", "vqgan", "checkpoint_path"), placeholder='自行查阅').style("width:200px;")
-                                
-                        with ui.card().style(card_css):
-                            ui.label("TTS配置")
-                            with ui.row():
-                                input_fish_speech_tts_config_prompt_text = ui.input(label='prompt_text', value=config.get("fish_speech", "tts_config", "prompt_text"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_prompt_tokens = ui.input(label='prompt_tokens', value=config.get("fish_speech", "tts_config", "prompt_tokens"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_max_new_tokens = ui.input(label='max_new_tokens', value=config.get("fish_speech", "tts_config", "max_new_tokens"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_top_k = ui.input(label='top_k', value=config.get("fish_speech", "tts_config", "top_k"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_top_p = ui.input(label='top_p', value=config.get("fish_speech", "tts_config", "top_p"), placeholder='自行查阅').style("width:200px;")
-                            with ui.row():
-                                input_fish_speech_tts_config_repetition_penalty = ui.input(label='repetition_penalty', value=config.get("fish_speech", "tts_config", "repetition_penalty"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_temperature = ui.input(label='temperature', value=config.get("fish_speech", "tts_config", "temperature"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_order = ui.input(label='order', value=config.get("fish_speech", "tts_config", "order"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_seed = ui.input(label='seed', value=config.get("fish_speech", "tts_config", "seed"), placeholder='自行查阅').style("width:200px;")
-                                input_fish_speech_tts_config_speaker = ui.input(label='speaker', value=config.get("fish_speech", "tts_config", "speaker"), placeholder='自行查阅').style("width:200px;")
-                                switch_fish_speech_tts_config_use_g2p = ui.switch('use_g2p', value=config.get("fish_speech", "tts_config", "use_g2p")).style(switch_internal_css)
-
-            if config.get("webui", "show_card", "tts", "chattts"): 
-                with ui.card().style(card_css):
-                    ui.label("ChatTTS")
-                    with ui.row():
-                        select_chattts_type = ui.select(
-                            label='类型', 
-                            options={"api": "api", "gradio_0621": "gradio_0621", "gradio": "gradio"}, 
-                            value=config.get("chattts", "type")
-                        ).style("width:150px").tooltip("对接的API类型")
-                        input_chattts_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("chattts", "api_ip_port"), 
-                            placeholder='刘悦佬接口程序启动后api监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;").tooltip("对接新版刘悦佬整合包的api接口，填api的地址")
-                        input_chattts_gradio_ip_port = ui.input(
-                            label='Gradio API地址', 
-                            value=config.get("chattts", "gradio_ip_port"), 
-                            placeholder='官方webui程序启动后gradio监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;").tooltip("对接旧版webui的gradio接口，填webui的地址")
-                        input_chattts_temperature = ui.input(label='温度', value=config.get("chattts", "temperature"), placeholder='默认：0.3').style("width:100px;").tooltip("Audio temperature,越大越发散，越小越保守")
-                        input_chattts_audio_seed_input = ui.input(label='声音种子', value=config.get("chattts", "audio_seed_input"), placeholder='默认：-1').style("width:100px;").tooltip("声音种子,-1随机，1女生,4女生,8男生")
-                        input_chattts_top_p = ui.input(label='top_p', value=config.get("chattts", "top_p"), placeholder='默认：0.7').style("width:100px;").tooltip("top_p")
-                        input_chattts_top_k = ui.input(label='top_k', value=config.get("chattts", "top_k"), placeholder='默认：20').style("width:100px;").tooltip("top_k")
-                        input_chattts_text_seed_input = ui.input(label='text_seed_input', value=config.get("chattts", "text_seed_input"), placeholder='默认：42').style("width:100px;").tooltip("text_seed_input")
-                        switch_chattts_refine_text_flag = ui.switch('refine_text', value=config.get("chattts", "refine_text_flag")).style(switch_internal_css)
-               
-                    with ui.card().style(card_css):
-                        ui.label("API相关配置")
-                        with ui.row():    
-                            input_chattts_api_seed = ui.input(label='声音种子', value=config.get("chattts", "api", "seed"), placeholder='默认：2581').style("width:200px;").tooltip("声音种子")
-                            input_chattts_api_media_type = ui.input(label='音频格式', value=config.get("chattts", "api", "media_type"), placeholder='默认：wav').style("width:200px;").tooltip("音频格式，没事不建议改")
+            
             if config.get("webui", "show_card", "tts", "cosyvoice"): 
                 with ui.card().style(card_css):
                     ui.label("CosyVoice")
@@ -7180,8 +6938,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gpt_sovits = ui.switch('gpt_sovits', value=config.get("webui", "show_card", "tts", "gpt_sovits")).style(switch_internal_css)
                         switch_webui_show_card_tts_azure_tts = ui.switch('azure_tts', value=config.get("webui", "show_card", "tts", "azure_tts")).style(switch_internal_css)
-                        switch_webui_show_card_tts_fish_speech = ui.switch('fish_speech', value=config.get("webui", "show_card", "tts", "fish_speech")).style(switch_internal_css)
-                        switch_webui_show_card_tts_chattts = ui.switch('ChatTTS', value=config.get("webui", "show_card", "tts", "chattts")).style(switch_internal_css)
                         switch_webui_show_card_tts_cosyvoice = ui.switch('CosyVoice', value=config.get("webui", "show_card", "tts", "cosyvoice")).style(switch_internal_css)
                         switch_webui_show_card_tts_f5_tts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "f5_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_multitts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "multitts")).style(switch_internal_css)
