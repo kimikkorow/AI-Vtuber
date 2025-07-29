@@ -27,9 +27,6 @@ from utils.gpt_model.llm_tpu import LLM_TPU
 from utils.gpt_model.dify import Dify
 from utils.gpt_model.volcengine import VolcEngine
 
-# 视觉模型
-from utils.gpt_model.blip import Blip
-
 class GPT_Model:
     openai = None
     
@@ -51,7 +48,6 @@ class GPT_Model:
             "llm_tpu": LLM_TPU,
             "dify": Dify,
             "volcengine": VolcEngine,
-            "blip": Blip,
         }
 
         if model_name == "openai":
@@ -68,7 +64,6 @@ class GPT_Model:
         model_classes = {
             "gemini": Gemini,
             "zhipu": Zhipu,
-            "blip": Blip,
         }
 
         setattr(self, model_name, model_classes[model_name](config))

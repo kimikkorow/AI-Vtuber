@@ -3113,9 +3113,6 @@ def goto_func_page():
                             "model": (select_image_recognition_zhipu_model, 'str'),
                             "api_key": (input_image_recognition_zhipu_api_key, 'str'),
                         },
-                        "blip": {
-                            "model": (select_image_recognition_blip_model, 'str'),
-                        },
                     }
                 }
 
@@ -6779,21 +6776,7 @@ def goto_func_page():
                                     "insert_index": -1
                                 }
                             }
-                        elif select_image_recognition_model.value == "blip":
-                            from utils.gpt_model.blip import Blip
-
-                            blip = Blip(config.get("image_recognition", "blip"))
-
-                            resp_content = blip.get_resp_with_img(prompt, screenshot_path)
-
-                            data = {
-                                "type": "reread",
-                                "data": {
-                                    "username": config.get("talk", "username"),
-                                    "content": resp_content,
-                                    "insert_index": -1
-                                }
-                            }
+                        
 
                         if send_to_all:
                             if data is not None:
@@ -6873,7 +6856,7 @@ def goto_func_page():
                     button_image_recognition_enable = ui.switch('启用', value=config.get("image_recognition", "enable")).style(switch_internal_css)
                     select_image_recognition_model = ui.select(
                         label='模型', 
-                        options={'gemini': 'gemini', 'zhipu': '智谱AI', 'blip': 'blip'}, 
+                        options={'gemini': 'gemini', 'zhipu': '智谱AI'}, 
                         value=config.get("image_recognition", "model")
                     ).style("width:150px")
                     
@@ -6943,18 +6926,6 @@ def goto_func_page():
                         value=config.get("image_recognition", "zhipu", "model")
                     ).style("width:150px")
                     input_image_recognition_zhipu_api_key = ui.input(label='API Key', value=config.get("image_recognition", "zhipu", "api_key"), placeholder='智谱 API KEY')
-            
-            with ui.card().style(card_css):
-                ui.label("Blip")
-                with ui.row():
-                    select_image_recognition_blip_model = ui.select(
-                        label='模型', 
-                        options={
-                            'Salesforce/blip-image-captioning-large': 'Salesforce/blip-image-captioning-large',
-                            'Salesforce/blip-image-captioning-base': 'Salesforce/blip-image-captioning-base',
-                        }, 
-                        value=config.get("image_recognition", "blip", "model")
-                    ).style("width:300px")
 
         with ui.tab_panel(assistant_anchor_page).style(tab_panel_css):
             with ui.row():
