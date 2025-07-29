@@ -19,7 +19,7 @@ async def download_audio(type, file_url, timeout):
             async with session.get(file_url, timeout=timeout) as response:
                 if response.status == 200:
                     content = await response.read()
-                    # file_name = 'tts_ai_lab_top_' + self.common.get_bj_time(4) + '.wav'
+                    # file_name = '_' + self.common.get_bj_time(4) + '.wav'
                     # voice_tmp_path = self.common.get_new_audio_path(audio_out_path, file_name)
                     voice_tmp_path = "2.wav"
                     with open(voice_tmp_path, 'wb') as file:

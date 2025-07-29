@@ -325,38 +325,6 @@
     "history_enable": true,
     "history_max_len": 300
   },
-  "claude": {
-    "slack_user_token": "",
-    "bot_user_id": ""
-  },
-  "claude2": {
-    "cookie": "",
-    "use_proxy": false,
-    "proxies": {
-      "http": "http://127.0.0.1:10809",
-      "https": "http://127.0.0.1:10809",
-      "socks5": "socks://127.0.0.1:10808"
-    }
-  },
-  "chatglm": {
-    "api_ip_port": "http://127.0.0.1:8000",
-    "max_length": 2048,
-    "top_p": 0.7,
-    "temperature": 0.95,
-    "max_new_tokens": 250,
-    "history_enable": true,
-    "history_max_len": 500
-  },
-  "qwen": {
-    "api_ip_port": "http://localhost:8000/v1/chat/completions",
-    "max_length": 4096,
-    "top_p": 0.5,
-    "temperature": 0.95,
-    "max_new_tokens": 250,
-    "history_enable": true,
-    "history_max_len": 20,
-    "preset": "请扮演一个AI虚拟主播。不要回答任何敏感问题！不要强调你是主播，只需要回答问题！"
-  },
   "sparkdesk": {
     "type": "api",
     "cookie": "",
@@ -399,13 +367,6 @@
     "question_prompt": "请根据以上content信息进行归纳总结，并结合question的内容给出一个符合content和question语气、语调、背景的回答。不要出现'概括''综上''感谢'等字样，向朋友直接互相交流即可。如果发现不能content的信息与question不相符，抛弃content的提示，直接回答question即可。任何情况下都要简要地回答!",
     "local_max_query": 3,
     "local_vector_embedding_model": "sebastian-hofstaetter/distilbert-dot-tas_b-b256-msmarco"
-  },
-  "langchain_chatglm": {
-    "api_ip_port": "http://127.0.0.1:7861",
-    "chat_type": "模型",
-    "knowledge_base_id": "ikaros",
-    "history_enable": true,
-    "history_max_len": 500
   },
   "langchain_chatchat": {
     "api_ip_port": "http://127.0.0.1:7861",
@@ -493,16 +454,6 @@
     "history_max_len": 300,
     "stream": true
   },
-  "my_qianfan": {
-    "model": "ERNIE-Bot-turbo",
-    "access_key": "",
-    "secret_key": "",
-    "top_p": 0.8,
-    "temperature": 0.9,
-    "penalty_score": 1.0,
-    "history_enable": true,
-    "history_max_len": 300
-  },
   "my_wenxinworkshop": {
     "type": "千帆大模型",
     "model": "ERNIEBot",
@@ -528,18 +479,6 @@
     "https_proxy": "http://127.0.0.1:10809",
     "history_enable": true,
     "history_max_len": 4096
-  },
-  "qanything": {
-    "type": "online",
-    "app_key": "",
-    "app_secret": "",
-    "api_ip_port": "http://127.0.0.1:8777",
-    "user_id": "zzp",
-    "kb_ids": [
-      "KB938fb10c8a924530abf1754ea620b7cd"
-    ],
-    "history_enable": true,
-    "history_max_len": 300
   },
   "koboldcpp": {
     "api_ip_port": "http://127.0.0.1:5001",
@@ -727,60 +666,12 @@
     "voice": "Rachel",
     "model": "eleven_monolingual_v1"
   },
-  "genshinvoice_top": {
-    "speaker": "神里绫华_ZH",
-    "format": "wav",
-    "length": "1.25",
-    "noise": "0.2",
-    "noisew": "0.9",
-    "language": "ZH"
-  },
-  "tts_ai_lab_top": {
-    "appid": "",
-    "token": "",
-    "speaker": "白露",
-    "sdp_ratio": "0.2",
-    "noise": "0.5",
-    "noisew": "0.9",
-    "length": "1.0",
-    "lang": "zh"
-  },
-  "bark_gui": {
-    "api_ip_port": "http://127.0.0.1:7860",
-    "spk": "zh_speaker_0",
-    "generation_temperature": 0.6,
-    "waveform_temperature": 0.7,
-    "end_of_sentence_probability": 0.05,
-    "quick_generation": true,
-    "seed": -1.0,
-    "batch_count": 1
-  },
-  "vall_e_x": {
-    "api_ip_port": "http://127.0.0.1:7860",
-    "language": "auto-detect",
-    "accent": "no-accent",
-    "voice_preset": "ikaros",
-    "voice_preset_file_path": "D:\\GitHub_pro\\AI-Vtuber\\tests\\test_VALL-E-X\\ikaros.npz"
-  },
   "openai_tts": {
     "type": "api",
     "api_ip_port": "https://api.openai.com/v1",
     "model": "tts-1",
     "voice": "nova",
     "api_key": "你的openai api key"
-  },
-  "reecho_ai": {
-    "Authorization": "sk-xxx",
-    "model": "reecho-neural-voice-001",
-    "randomness": 97,
-    "stability_boost": 40,
-    "voiceId": "b4b885c3-89a7-46d4-badb-015a55bb3a91",
-    "promptId": "default",
-    "probability_optimization": 99,
-    "break_clone": false,
-    "flash": false,
-    "origin_audio": false,
-    "stream": false
   },
   "gradio_tts": {
     "request_parameters": "{{\"url\": \"https://xzjosh-nana7mi-bert-vits2.hf.space/--replicas/b9be4/\", \"fn_index\": 0, \"data_analysis\": 1, \"text_input\": \"{content}\", \"speaker_option\": \"Nana7mi\", \"sdp_ratio\": 0.5, \"noise\": 0.6, \"noise_w\": 0.9, \"length\": 1}}"
@@ -847,13 +738,6 @@
       "speed": "1.0",
       "emotion": "正常"
     }
-  },
-  "clone_voice": {
-    "type": "tts",
-    "api_ip_port": "http://127.0.0.1:9988",
-    "voice": "cn-nan.wav",
-    "language": "zh-cn",
-    "speed": 1.0
   },
   "azure_tts": {
     "subscription_key": "",
@@ -1174,9 +1058,6 @@
     "zhipu": {
       "model": "glm-4v",
       "api_key": "api-key"
-    },
-    "blip": {
-      "model": "Salesforce/blip-image-captioning-large"
     }
   },
   "captions": {
@@ -2009,12 +1890,8 @@
       },
       "llm": {
         "chatgpt": true,
-        "claude": true,
-        "chatglm": true,
-        "qwen": true,
         "zhipu": true,
         "chat_with_file": true,
-        "langchain_chatglm": true,
         "langchain_chatchat": true,
         "chatterbot": true,
         "text_generation_webui": true,
@@ -2024,7 +1901,6 @@
         "tongyixingchen": true,
         "my_wenxinworkshop": true,
         "gemini": true,
-        "qanything": true,
         "koboldcpp": true,
         "anythingllm": true,
         "gpt4free": true,
@@ -2039,15 +1915,9 @@
         "bert_vits2": true,
         "vits_fast": true,
         "elevenlabs": true,
-        "genshinvoice_top": true,
-        "tts_ai_lab_top": true,
-        "bark_gui": true,
-        "vall_e_x": true,
         "openai_tts": true,
-        "reecho_ai": true,
         "gradio_tts": true,
         "gpt_sovits": true,
-        "clone_voice": true,
         "azure_tts": true,
         "fish_speech": true,
         "chattts": true,

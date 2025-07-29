@@ -997,37 +997,7 @@ class Audio:
                 logger.info(f"elevenlabs合成内容：【{message['content']}】")
 
                 return
-            elif message["tts_type"] == "genshinvoice_top":
-                voice_tmp_path = await self.my_tts.genshinvoice_top_api(message["content"])
-            elif message["tts_type"] == "tts_ai_lab_top":
-                voice_tmp_path = await self.my_tts.tts_ai_lab_top_api(message["content"])
-            elif message["tts_type"] == "bark_gui":
-                data = {
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "spk": message["data"]["spk"],
-                    "generation_temperature": message["data"]["generation_temperature"],
-                    "waveform_temperature": message["data"]["waveform_temperature"],
-                    "end_of_sentence_probability": message["data"]["end_of_sentence_probability"],
-                    "quick_generation": message["data"]["quick_generation"],
-                    "seed": message["data"]["seed"],
-                    "batch_count": message["data"]["batch_count"],
-                    "content": message["content"]
-                }
-
-                # 调用接口合成语音
-                voice_tmp_path = self.my_tts.bark_gui_api(data)
-            elif message["tts_type"] == "vall_e_x":
-                data = {
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "language": message["data"]["language"],
-                    "accent": message["data"]["accent"],
-                    "voice_preset": message["data"]["voice_preset"],
-                    "voice_preset_file_path": message["data"]["voice_preset_file_path"],
-                    "content": message["content"]
-                }
-
-                # 调用接口合成语音
-                voice_tmp_path = self.my_tts.vall_e_x_api(data)
+            
             elif message["tts_type"] == "openai_tts":
                 data = {
                     "type": message["data"]["type"],
@@ -1040,8 +1010,7 @@ class Audio:
 
                 # 调用接口合成语音
                 voice_tmp_path = self.my_tts.openai_tts_api(data)
-            elif message["tts_type"] == "reecho_ai":
-                voice_tmp_path = await self.my_tts.reecho_ai_api(message["content"])
+            
             elif message["tts_type"] == "gradio_tts":
                 data = {
                     "request_parameters": message["data"]["request_parameters"],
@@ -1100,17 +1069,7 @@ class Audio:
                 }
 
                 voice_tmp_path = await self.my_tts.gpt_sovits_api(data)  
-            elif message["tts_type"] == "clone_voice":
-                data = {
-                    "type": message["data"]["type"],
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "voice": message["data"]["voice"],
-                    "language": message["data"]["language"],
-                    "speed": message["data"]["speed"],
-                    "content": message["content"]
-                }
-
-                voice_tmp_path = await self.my_tts.clone_voice_api(data)
+            
             elif message["tts_type"] == "azure_tts":
                 data = {
                     "subscription_key": message["data"]["subscription_key"],
@@ -1883,8 +1842,6 @@ class Audio:
 
         vits = self.config.get("vits")
         vits_fast = self.config.get("vits_fast")
-        bark_gui = self.config.get("bark_gui")
-        vall_e_x = self.config.get("vall_e_x")
         openai_tts = self.config.get("openai_tts")
     
         if audio_synthesis_type == "vits":
@@ -2010,40 +1967,6 @@ class Audio:
             except Exception as e:
                 logger.error(traceback.format_exc())
                 return
-        elif audio_synthesis_type == "bark_gui":
-            data = {
-                "api_ip_port": bark_gui["api_ip_port"],
-                "spk": bark_gui["spk"],
-                "generation_temperature": bark_gui["generation_temperature"],
-                "waveform_temperature": bark_gui["waveform_temperature"],
-                "end_of_sentence_probability": bark_gui["end_of_sentence_probability"],
-                "quick_generation": bark_gui["quick_generation"],
-                "seed": bark_gui["seed"],
-                "batch_count": bark_gui["batch_count"],
-                "content": content
-            }
-
-            # 调用接口合成语音
-            voice_tmp_path = self.my_tts.bark_gui_api(data)
-        elif audio_synthesis_type == "vall_e_x":
-            data = {
-                "api_ip_port": vall_e_x["api_ip_port"],
-                "language": vall_e_x["language"],
-                "accent": vall_e_x["accent"],
-                "voice_preset": vall_e_x["voice_preset"],
-                "voice_preset_file_path":vall_e_x["voice_preset_file_path"],
-                "content": content
-            }
-
-            # 调用接口合成语音
-            voice_tmp_path = self.my_tts.vall_e_x_api(data)
-        elif audio_synthesis_type == "genshinvoice_top":
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.genshinvoice_top_api(content)
-
-        elif audio_synthesis_type == "tts_ai_lab_top":
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.tts_ai_lab_top_api(content)
 
         elif audio_synthesis_type == "openai_tts":
             data = {
@@ -2058,11 +1981,7 @@ class Audio:
             # 调用接口合成语音
             voice_tmp_path = self.my_tts.openai_tts_api(data)
             
-        elif audio_synthesis_type == "reecho_ai":
-            data = content
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.reecho_ai_api(data)
-
+        
         elif audio_synthesis_type == "gradio_tts":
             data = {
                 "request_parameters": self.config.get("gradio_tts", "request_parameters"),
@@ -2108,18 +2027,7 @@ class Audio:
             # 调用接口合成语音
             voice_tmp_path = await self.my_tts.gpt_sovits_api(data)
         
-        elif audio_synthesis_type == "clone_voice":
-            data = {
-                "type": self.config.get("clone_voice", "type"),
-                "api_ip_port": self.config.get("clone_voice", "api_ip_port"),
-                "voice": self.config.get("clone_voice", "voice"),
-                "language": self.config.get("clone_voice", "language"),
-                "speed": self.config.get("clone_voice", "speed"),
-                "content": content
-            }
-                    
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.clone_voice_api(data)
+        
 
         elif audio_synthesis_type == "azure_tts":
             data = {

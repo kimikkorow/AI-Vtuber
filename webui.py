@@ -2264,31 +2264,7 @@ def goto_func_page():
 
                     config_data = update_config(config_mapping, config, config_data, "llm")
 
-                if config.get("webui", "show_card", "llm", "claude"):
-                    config_mapping["claude"] = {
-                        "slack_user_token": (input_claude_slack_user_token, 'str'),
-                        "bot_user_id": (input_claude_bot_user_id, 'str'),
-                    }
 
-                if config.get("webui", "show_card", "llm", "chatglm"):
-                    config_mapping["chatglm"] = {
-                        "api_ip_port": (input_chatglm_api_ip_port, 'str'),
-                        "max_length": (input_chatglm_max_length, 'int'),
-                        "top_p": (input_chatglm_top_p, 'float'),
-                        "temperature": (input_chatglm_temperature, 'float'),
-                        "history_enable": (switch_chatglm_history_enable, 'bool'),
-                        "history_max_len": (input_chatglm_history_max_len, 'int'),
-                    }
-                if config.get("webui", "show_card", "llm", "qwen"):
-                    config_mapping["qwen"] = {
-                        "api_ip_port": (input_qwen_api_ip_port, 'str'),
-                        "max_length": (input_qwen_max_length, 'int'),
-                        "top_p": (input_qwen_top_p, 'float'),
-                        "temperature": (input_qwen_temperature, 'float'),
-                        "history_enable": (switch_qwen_history_enable, 'bool'),
-                        "history_max_len": (input_qwen_history_max_len, 'int'),
-                        "preset": (input_qwen_preset, 'str'),
-                    }
                 if config.get("webui", "show_card", "llm", "chat_with_file"):
                     config_mapping["chat_with_file"] = {
                         "chat_mode": (select_chat_with_file_chat_mode, 'str'),
@@ -2334,14 +2310,6 @@ def goto_func_page():
                         "api_key": (input_sparkdesk_api_key, 'str'),
                         "version": (select_sparkdesk_version, 'float'),
                         "assistant_id": (input_sparkdesk_assistant_id, 'str'),
-                    }
-                if config.get("webui", "show_card", "llm", "langchain_chatglm"):
-                    config_mapping["langchain_chatglm"] = {
-                        "api_ip_port": (input_langchain_chatglm_api_ip_port, 'str'),
-                        "chat_type": (select_langchain_chatglm_chat_type, 'str'),
-                        "knowledge_base_id": (input_langchain_chatglm_knowledge_base_id, 'str'),
-                        "history_enable": (switch_langchain_chatglm_history_enable, 'bool'),
-                        "history_max_len": (input_langchain_chatglm_history_max_len, 'int'),
                     }
                 if config.get("webui", "show_card", "llm", "langchain_chatchat"):
                     config_mapping["langchain_chatchat"] = {
@@ -2458,17 +2426,7 @@ def goto_func_page():
                         "top_p": (input_gemini_top_p, 'float'),
                         "top_k": (input_gemini_top_k, 'int'),
                     }
-                if config.get("webui", "show_card", "llm", "qanything"):
-                    config_mapping["qanything"] = {
-                        "type": (select_qanything_type, 'str'),
-                        "app_key": (input_qanything_app_key, 'str'),
-                        "app_secret": (input_qanything_app_secret, 'str'),
-                        "api_ip_port": (input_qanything_api_ip_port, 'str'),
-                        "user_id": (input_qanything_user_id, 'str'),
-                        "kb_ids": (textarea_qanything_kb_ids, 'textarea'),  
-                        "history_enable": (switch_qanything_history_enable, 'bool'),
-                        "history_max_len": (input_qanything_history_max_len, 'int'),
-                    }
+                
                 if config.get("webui", "show_card", "llm", "koboldcpp"):
                     config_mapping["koboldcpp"] = {
                         "api_ip_port": (input_koboldcpp_api_ip_port, 'str'),
@@ -2547,13 +2505,6 @@ def goto_func_page():
 
                 config_data = update_config(config_mapping, config, config_data, "llm")
 
-                if config.get("webui", "show_card", "llm", "claude"):
-                    config_data["claude2"]["cookie"] = input_claude2_cookie.value
-                    config_data["claude2"]["use_proxy"] = switch_claude2_use_proxy.value
-                    config_data["claude2"]["proxies"]["http"] = input_claude2_proxies_http.value
-                    config_data["claude2"]["proxies"]["https"] = input_claude2_proxies_https.value
-                    config_data["claude2"]["proxies"]["socks5"] = input_claude2_proxies_socks5.value
-                    
             """
             TTS
             """
@@ -2641,25 +2592,7 @@ def goto_func_page():
                         "voice": (input_elevenlabs_voice, 'str'),
                         "model": (input_elevenlabs_model, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "bark_gui"):
-                    config_mapping["bark_gui"] = {
-                        "api_ip_port": (input_bark_gui_api_ip_port, 'str'),
-                        "spk": (input_bark_gui_spk, 'str'),
-                        "generation_temperature": (input_bark_gui_generation_temperature, 'float'),
-                        "waveform_temperature": (input_bark_gui_waveform_temperature, 'float'),
-                        "end_of_sentence_probability": (input_bark_gui_end_of_sentence_probability, 'float'),
-                        "quick_generation": (switch_bark_gui_quick_generation, 'bool'),
-                        "seed": (input_bark_gui_seed, 'float'),
-                        "batch_count": (input_bark_gui_batch_count, 'int'),
-                    }
-                if config.get("webui", "show_card", "tts", "vall_e_x"):
-                    config_mapping["vall_e_x"] = {
-                        "api_ip_port": (input_vall_e_x_api_ip_port, 'str'),
-                        "language": (select_vall_e_x_language, 'str'),
-                        "accent": (select_vall_e_x_accent, 'str'),
-                        "voice_preset": (input_vall_e_x_voice_preset, 'str'),
-                        "voice_preset_file_path": (input_vall_e_x_voice_preset_file_path, 'str'),
-                    }
+                
                 if config.get("webui", "show_card", "tts", "openai_tts"):
                     config_mapping["openai_tts"] = {
                         "type": (select_openai_tts_type, 'str'),
@@ -2668,18 +2601,7 @@ def goto_func_page():
                         "voice": (select_openai_tts_voice, 'str'),
                         "api_key": (input_openai_tts_api_key, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "reecho_ai"):
-                    config_mapping["reecho_ai"] = {
-                        "Authorization": (input_reecho_ai_Authorization, 'str'),
-                        "model": (input_reecho_ai_model, 'str'),
-                        "voiceId": (input_reecho_ai_voiceId, 'str'),
-                        "randomness": (number_reecho_ai_randomness, 'int'),
-                        "stability_boost": (number_reecho_ai_stability_boost, 'int'),
-                        "promptId": (input_reecho_ai_promptId, 'str'),
-                        "probability_optimization": (number_reecho_ai_probability_optimization, 'int'),
-                        "break_clone": (switch_reecho_ai_break_clone, 'bool'),
-                        "flash": (switch_reecho_ai_flash, 'bool'),
-                    }
+                
                 if config.get("webui", "show_card", "tts", "gradio_tts"):
                     config_mapping["gradio_tts"] = {
                         "request_parameters": (textarea_gradio_tts_request_parameters, 'str'),
@@ -2746,14 +2668,7 @@ def goto_func_page():
                             "emotion": (input_gpt_sovits_webtts_emotion, 'str'),
                         }
                     }
-                if config.get("webui", "show_card", "tts", "clone_voice"):
-                    config_mapping["clone_voice"] = {
-                        "type": (select_clone_voice_type, 'str'),
-                        "api_ip_port": (input_clone_voice_api_ip_port, 'str'),
-                        "voice": (input_clone_voice_voice, 'str'),
-                        "language": (select_clone_voice_language, 'str'),
-                        "speed": (input_clone_voice_speed, 'float'),
-                    }
+
                 if config.get("webui", "show_card", "tts", "azure_tts"):
                     config_mapping["azure_tts"] = {
                         "subscription_key": (input_azure_tts_subscription_key, 'str'),
@@ -3162,9 +3077,6 @@ def goto_func_page():
                             "model": (select_image_recognition_zhipu_model, 'str'),
                             "api_key": (input_image_recognition_zhipu_api_key, 'str'),
                         },
-                        "blip": {
-                            "model": (select_image_recognition_blip_model, 'str'),
-                        },
                     }
                 }
 
@@ -3306,12 +3218,8 @@ def goto_func_page():
                             },
                             "llm": {
                                 "chatgpt": (switch_webui_show_card_llm_chatgpt, 'bool'),
-                                "claude": (switch_webui_show_card_llm_claude, 'bool'),
-                                "chatglm": (switch_webui_show_card_llm_chatglm, 'bool'),
-                                "qwen": (switch_webui_show_card_llm_qwen, 'bool'),
                                 "zhipu": (switch_webui_show_card_llm_zhipu, 'bool'),
                                 "chat_with_file": (switch_webui_show_card_llm_chat_with_file, 'bool'),
-                                "langchain_chatglm": (switch_webui_show_card_llm_langchain_chatglm, 'bool'),
                                 "langchain_chatchat": (switch_webui_show_card_llm_langchain_chatchat, 'bool'),
                                 "chatterbot": (switch_webui_show_card_llm_chatterbot, 'bool'),
                                 "text_generation_webui": (switch_webui_show_card_llm_text_generation_webui, 'bool'),
@@ -3321,7 +3229,6 @@ def goto_func_page():
                                 "tongyixingchen": (switch_webui_show_card_llm_tongyixingchen, 'bool'),
                                 "my_wenxinworkshop": (switch_webui_show_card_llm_my_wenxinworkshop, 'bool'),
                                 "gemini": (switch_webui_show_card_llm_gemini, 'bool'),
-                                "qanything": (switch_webui_show_card_llm_qanything, 'bool'),
                                 "koboldcpp": (switch_webui_show_card_llm_koboldcpp, 'bool'),
                                 "anythingllm": (switch_webui_show_card_llm_anythingllm, 'bool'),
                                 "gpt4free": (switch_webui_show_card_llm_gpt4free, 'bool'),
@@ -3336,13 +3243,9 @@ def goto_func_page():
                                 "bert_vits2": (switch_webui_show_card_tts_bert_vits2, 'bool'),
                                 "vits_fast": (switch_webui_show_card_tts_vits_fast, 'bool'),
                                 "elevenlabs": (switch_webui_show_card_tts_elevenlabs, 'bool'),
-                                "bark_gui": (switch_webui_show_card_tts_bark_gui, 'bool'),
-                                "vall_e_x": (switch_webui_show_card_tts_vall_e_x, 'bool'),
                                 "openai_tts": (switch_webui_show_card_tts_openai_tts, 'bool'),
-                                "reecho_ai": (switch_webui_show_card_tts_reecho_ai, 'bool'),
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
                                 "gpt_sovits": (switch_webui_show_card_tts_gpt_sovits, 'bool'),
-                                "clone_voice": (switch_webui_show_card_tts_clone_voice, 'bool'),
                                 "azure_tts": (switch_webui_show_card_tts_azure_tts, 'bool'),
                                 "fish_speech": (switch_webui_show_card_tts_fish_speech, 'bool'),
                                 "chattts": (switch_webui_show_card_tts_chattts, 'bool'),
@@ -3484,15 +3387,9 @@ def goto_func_page():
         'bert_vits2': 'bert_vits2',
         'vits_fast': 'VITS-Fast', 
         'elevenlabs': 'elevenlabs',
-        #'genshinvoice_top': 'genshinvoice_top',
-        #'tts_ai_lab_top': 'tts_ai_lab_top',
-        'bark_gui': 'bark_gui',
-        'vall_e_x': 'VALL-E-X',
         'openai_tts': 'OpenAI TTS',
-        'reecho_ai': '睿声AI',
         'gradio_tts': 'Gradio',
         'gpt_sovits': 'GPT_SoVITS',
-        'clone_voice': 'clone-voice',
         'azure_tts': 'azure_tts',
         'fish_speech': 'fish_speech',
         'chattts': 'ChatTTS',
@@ -3508,22 +3405,16 @@ def goto_func_page():
         'none': '不启用', 
         'reread': '复读机', 
         'chatgpt': 'ChatGPT/闻达', 
-        'claude': 'Claude', 
-        'claude2': 'Claude2',
-        'chatglm': 'ChatGLM',
-        'qwen': 'Qwen',
         'chat_with_file': 'chat_with_file',
         'chatterbot': 'Chatterbot',
         'text_generation_webui': 'text_generation_webui',
         'sparkdesk': '讯飞星火',
-        'langchain_chatglm': 'langchain_chatglm',
         'langchain_chatchat': 'langchain_chatchat',
         'zhipu': '智谱AI',
         'bard': 'Bard',
         'tongyixingchen': '通义星尘',
         'my_wenxinworkshop': '千帆大模型',
         'gemini': 'Gemini',
-        'qanything': 'QAnything',
         'koboldcpp': 'koboldcpp',
         'anythingllm': 'AnythingLLM',
         'tongyi': '通义千问/阿里云百炼',
@@ -4596,86 +4487,13 @@ def goto_func_page():
 
                         input_chatgpt_preset = ui.input(label='预设', placeholder='用于指定一组预定义的设置，以便模型更好地适应特定的对话场景。', value=config.get("chatgpt", "preset")).style("width:500px") 
 
-            if config.get("webui", "show_card", "llm", "claude"):
-                with ui.card().style(card_css):
-                    with ui.card().style(card_css):
-                        ui.label("Claude")
-                        with ui.row():
-                            input_claude_slack_user_token = ui.input(label='slack_user_token', placeholder='Slack平台配置的用户Token，参考文档的Claude板块进行配置', value=config.get("claude", "slack_user_token"))
-                            input_claude_slack_user_token.style("width:400px")
-                            input_claude_bot_user_id = ui.input(label='bot_user_id', placeholder='Slack平台添加的Claude显示的成员ID，参考文档的Claude板块进行配置', value=config.get("claude", "bot_user_id"))
-                            input_claude_slack_user_token.style("width:400px") 
-                
-                    with ui.card().style(card_css):
-                        ui.label("Claude2")
-                        with ui.row():
-                            input_claude2_cookie = ui.input(label='cookie', placeholder='claude.ai官网，打开F12，随便提问抓个包，请求头cookie配置于此', value=config.get("claude2", "cookie"))
-                            input_claude2_cookie.style("width:400px")
-                            switch_claude2_use_proxy = ui.switch('启用代理', value=config.get("claude2", "use_proxy")).style(switch_internal_css)
-                        with ui.row():
-                            input_claude2_proxies_http = ui.input(label='proxies_http', placeholder='http代理地址，默认为 http://127.0.0.1:10809', value=config.get("claude2", "proxies", "http"))
-                            input_claude2_proxies_http.style("width:400px") 
-                            input_claude2_proxies_https = ui.input(label='proxies_https', placeholder='https代理地址，默认为 http://127.0.0.1:10809', value=config.get("claude2", "proxies", "https"))
-                            input_claude2_proxies_https.style("width:400px")
-                            input_claude2_proxies_socks5 = ui.input(label='proxies_socks5', placeholder='socks5代理地址，默认为 socks://127.0.0.1:10808', value=config.get("claude2", "proxies", "socks5"))
-                            input_claude2_proxies_socks5.style("width:400px") 
             
-            if config.get("webui", "show_card", "llm", "chatglm"):
-                with ui.card().style(card_css):
-                    ui.label("ChatGLM1、2")
-                    with ui.row():
-                        input_chatglm_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='ChatGLM的API版本运行后的服务链接（需要完整的URL）', 
-                            value=config.get("chatglm", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                        input_chatglm_api_ip_port.style("width:400px")
-                        input_chatglm_max_length = ui.input(label='最大长度限制', placeholder='生成回答的最大长度限制，以令牌数或字符数为单位。', value=config.get("chatglm", "max_length"))
-                        input_chatglm_max_length.style("width:200px")
-                        input_chatglm_top_p = ui.input(label='前p个选择', placeholder='也称为 Nucleus采样。控制模型生成时选择概率的阈值范围。', value=config.get("chatglm", "top_p"))
-                        input_chatglm_top_p.style("width:200px")
-                        input_chatglm_temperature = ui.input(label='温度', placeholder='温度参数，控制生成文本的随机性。较高的温度值会产生-更多的随机性和多样性。', value=config.get("chatglm", "temperature"))
-                        input_chatglm_temperature.style("width:200px")
-                    with ui.row():
-                        switch_chatglm_history_enable = ui.switch('上下文记忆', value=config.get("chatglm", "history_enable")).style(switch_internal_css)
-                        input_chatglm_history_max_len = ui.input(label='最大记忆长度', placeholder='最大记忆的上下文字符数量，不建议设置过大，容易爆显存，自行根据情况配置', value=config.get("chatglm", "history_max_len"))
-                        input_chatglm_history_max_len.style("width:200px")
             
-            if config.get("webui", "show_card", "llm", "qwen"):
-                with ui.card().style(card_css):
-                    ui.label("Qwen")
-                    with ui.row():
-                        input_qwen_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='ChatGLM的API版本运行后的服务链接（需要完整的URL）', 
-                            value=config.get("qwen", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                        input_qwen_api_ip_port.style("width:400px")
-                        input_qwen_max_length = ui.input(label='最大长度限制', placeholder='生成回答的最大长度限制，以令牌数或字符数为单位。', value=config.get("qwen", "max_length"))
-                        input_qwen_max_length.style("width:200px")
-                        input_qwen_top_p = ui.input(label='前p个选择', placeholder='也称为 Nucleus采样。控制模型生成时选择概率的阈值范围。', value=config.get("qwen", "top_p"))
-                        input_qwen_top_p.style("width:200px")
-                        input_qwen_temperature = ui.input(label='温度', placeholder='温度参数，控制生成文本的随机性。较高的温度值会产生更多的随机性和多样性。', value=config.get("qwen", "temperature"))
-                        input_qwen_temperature.style("width:200px")
-                    with ui.row():
-                        switch_qwen_history_enable = ui.switch('上下文记忆', value=config.get("qwen", "history_enable")).style(switch_internal_css)
-                        input_qwen_history_max_len = ui.input(label='最大记忆轮数', placeholder='最大记忆的上下文轮次数量，不建议设置过大，容易爆显存，自行根据情况配置', value=config.get("qwen", "history_max_len"))
-                        input_qwen_history_max_len.style("width:200px")
-                        input_qwen_preset = ui.input(label='预设',
-                                                        placeholder='用于指定一组预定义的设置，以便模型更好地适应特定的对话场景。',
-                                                        value=config.get("chatgpt", "preset")).style("width:500px")
-
             if config.get("webui", "show_card", "llm", "chat_with_file"):
                 with ui.card().style(card_css):
                     ui.label("chat_with_file")
                     with ui.row():
-                        lines = ["claude", "openai_gpt", "openai_vector_search"]
+                        lines = [ "openai_gpt", "openai_vector_search"]
                         data_json = {}
                         for line in lines:
                             data_json[line] = line
@@ -4805,36 +4623,7 @@ def goto_func_page():
                                 value=str(config.get("sparkdesk", "version"))
                             ).style("width:100px") 
                             input_sparkdesk_assistant_id = ui.input(label='助手ID', value=config.get("sparkdesk", "assistant_id"), placeholder='助手创作中心，创建助手后助手API的接口地址最后的助手ID').style("width:100px") 
-                            
-            if config.get("webui", "show_card", "llm", "langchain_chatglm"):  
-                with ui.card().style(card_css):
-                    ui.label("Langchain_ChatGLM")
-                    with ui.row():
-                        input_langchain_chatglm_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='langchain_chatglm的API版本运行后的服务链接（需要完整的URL）', 
-                            value=config.get("langchain_chatglm", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                        input_langchain_chatglm_api_ip_port.style("width:400px")
-                        lines = ["模型", "知识库", "必应"]
-                        data_json = {}
-                        for line in lines:
-                            data_json[line] = line
-                        select_langchain_chatglm_chat_type = ui.select(
-                            label='类型', 
-                            options=data_json, 
-                            value=config.get("langchain_chatglm", "chat_type")
-                        )
-                    with ui.row():
-                        input_langchain_chatglm_knowledge_base_id = ui.input(label='知识库名称', placeholder='本地存在的知识库名称，日志也有输出知识库列表，可以查看', value=config.get("langchain_chatglm", "knowledge_base_id"))
-                        input_langchain_chatglm_knowledge_base_id.style("width:400px")
-                        switch_langchain_chatglm_history_enable = ui.switch('上下文记忆', value=config.get("langchain_chatglm", "history_enable")).style(switch_internal_css)
-                        input_langchain_chatglm_history_max_len = ui.input(label='最大记忆长度', placeholder='最大记忆的上下文字符数量，不建议设置过大，容易爆显存，自行根据情况配置', value=config.get("langchain_chatglm", "history_max_len"))
-                        input_langchain_chatglm_history_max_len.style("width:400px")
-            
+                 
             if config.get("webui", "show_card", "llm", "langchain_chatchat"):  
                 with ui.card().style(card_css):
                     ui.label("Langchain_ChatChat")
@@ -5066,38 +4855,6 @@ def goto_func_page():
                         
 
 
-            # with ui.card().style(card_css):
-            #     ui.label("千帆大模型（兼容问题暂不启用）")
-            #     with ui.row():
-            #         input_my_qianfan_access_key = ui.input(label='access_key', value=config.get("my_qianfan", "access_key"), placeholder='官网右上角安全认证申请开通access_key')
-            #         input_my_qianfan_secret_key = ui.input(label='secret_key', value=config.get("my_qianfan", "secret_key"), placeholder='官网右上角安全认证申请开通access_key')
-            #         lines = [
-            #             'ERNIE-Bot-turbo', 
-            #             'ERNIE-Bot',
-            #             'ERNIE-Bot-4',
-            #             'BLOOMZ-7B',
-            #             'Llama-2-7b-chat',
-            #             'Llama-2-13b-chat',
-            #             'Llama-2-70b-chat',
-            #             'Qianfan-BLOOMZ-7B-compressed',
-            #             'Qianfan-Chinese-Llama-2-7B',
-            #             'ChatGLM2-6B-32K',
-            #             'AquilaChat-7B'
-            #         ]
-            #         data_json = {}
-            #         for line in lines:
-            #             data_json[line] = line
-            #         select_my_qianfan_model = ui.select(
-            #             label='模型', 
-            #             options=data_json, 
-            #             value=config.get("my_qianfan", "model")
-            #         ).style("width:150px")
-            #         switch_my_qianfan_history_enable = ui.switch('上下文记忆', value=config.get("my_qianfan", "history_enable")).style(switch_internal_css)
-            #         input_my_qianfan_history_max_len = ui.input(label='最大记忆长度', value=config.get("my_qianfan", "history_max_len"), placeholder='最长能记忆的问答字符串长度，超长会丢弃最早记忆的内容，请慎用！配置过大可能会有丢大米')
-            #     with ui.row():
-            #         input_my_qianfan_temperature = ui.input(label='温度', value=config.get("my_qianfan", "temperature"), placeholder='控制生成文本的随机性。较高的温度值会使生成的文本更随机和多样化，而较低的温度值会使生成的文本更加确定和一致。').style("width:200px;")
-            #         input_my_qianfan_top_p = ui.input(label='前p个选择', value=config.get("my_qianfan", "top_p"), placeholder='Nucleus采样。这个参数控制模型从累积概率大于一定阈值的令牌中进行采样。较高的值会产生更多的多样性，较低的值会产生更少但更确定的回答。').style("width:200px;")
-            #         input_my_qianfan_penalty_score = ui.input(label='惩罚得分', value=config.get("my_qianfan", "penalty_score"), placeholder='在生成文本时对某些词语或模式施加的惩罚。这是一种调节生成内容的机制，用来减少或避免不希望出现的内容。').style("width:200px;")
             
             if config.get("webui", "show_card", "llm", "gemini"):
                 with ui.card().style(card_css):
@@ -5126,32 +4883,7 @@ def goto_func_page():
                         input_gemini_top_p = ui.input(label='top_p', value=config.get("gemini", "top_p"), placeholder='在抽样时考虑的标记的最大累积概率。根据其分配的概率对标记进行排序，以仅考虑最可能的标记。Top-k采样直接限制要考虑的标记的最大数量，而Nucleus采样则基于累积概率限制标记的数量。')
                         input_gemini_top_k = ui.input(label='top_k', value=config.get("gemini", "top_k"), placeholder='在抽样时考虑的标记的最大数量。Top-k采样考虑一组top_k最有可能的标记。默认值为40。')
 
-            if config.get("webui", "show_card", "llm", "qanything"):
-                with ui.card().style(card_css):
-                    ui.label("QAnything")
-                    with ui.row():
-                        select_qanything_type = ui.select(
-                            label='类型', 
-                            options={'online': '在线API', 'local': '本地API'}, 
-                            value=config.get("qanything", "type")
-                        ).style("width:200px")
-                        input_qanything_app_key = ui.input(label='应用ID', value=config.get("qanything", "app_key"), placeholder='在线平台 应用ID')
-                        input_qanything_app_secret = ui.input(label='密钥', value=config.get("qanything", "app_secret"), placeholder='在线平台 密钥')
-                        
-                        input_qanything_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("qanything", "api_ip_port"), 
-                            placeholder='qanything启动后API监听的ip端口地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                    with ui.row():
-                        input_qanything_user_id = ui.input(label='用户ID', value=config.get("qanything", "user_id"), placeholder='用户ID，默认的就是 zzp')
-                        textarea_qanything_kb_ids = ui.textarea(label='知识库ID', placeholder='知识库ID，启动时会自动检索输出日志', value=textarea_data_change(config.get("qanything", "kb_ids"))).style("width:300px;")
-                        switch_qanything_history_enable = ui.switch('上下文记忆', value=config.get("qanything", "history_enable")).style(switch_internal_css)
-                        input_qanything_history_max_len = ui.input(label='最大记忆长度', value=config.get("qanything", "history_max_len"), placeholder='最长能记忆的问答字符串长度，超长会丢弃最早记忆的内容，请慎用！配置过大可能会有丢大米')
-
+            
             if config.get("webui", "show_card", "llm", "koboldcpp"):
                 with ui.card().style(card_css):
                     ui.label("koboldcpp")
@@ -5724,48 +5456,6 @@ def goto_func_page():
                         input_elevenlabs_model = ui.input(label='模型', placeholder='选择的模型', value=config.get("elevenlabs", "model"))
             
             
-            if config.get("webui", "show_card", "tts", "bark_gui"):    
-                with ui.card().style(card_css):
-                    ui.label("bark_gui")
-                    with ui.row():
-                        input_bark_gui_api_ip_port = ui.input(label='API地址', placeholder='bark-gui开启webui后监听的IP和端口地址', value=config.get("bark_gui", "api_ip_port")).style("width:200px;")
-                        input_bark_gui_spk = ui.input(label='说话人', placeholder='选择的说话人，webui的voice中对应的说话人', value=config.get("bark_gui", "spk")).style("width:200px;")
-
-                        input_bark_gui_generation_temperature = ui.input(label='生成温度', placeholder='控制合成过程中生成语音的随机性。较高的值（接近1.0）会使输出更加随机，而较低的值（接近0.0）则使其更加确定性和集中。', value=config.get("bark_gui", "generation_temperature")).style("width:200px;")
-                        input_bark_gui_waveform_temperature = ui.input(label='波形温度', placeholder='类似于generation_temperature，但该参数专门控制从语音模型生成的波形的随机性', value=config.get("bark_gui", "waveform_temperature")).style("width:200px;")
-                    with ui.row():
-                        input_bark_gui_end_of_sentence_probability = ui.input(label='句末概率', placeholder='该参数确定在句子结尾添加停顿或间隔的可能性。较高的值会增加停顿的几率，而较低的值则会减少。', value=config.get("bark_gui", "end_of_sentence_probability")).style("width:200px;")
-                        switch_bark_gui_quick_generation = ui.switch('快速生成', value=config.get("bark_gui", "quick_generation")).style(switch_internal_css)
-                        input_bark_gui_seed = ui.input(label='随机种子', placeholder='用于随机数生成器的种子值。使用特定的种子确保相同的输入文本每次生成的语音输出都是相同的。值为-1表示将使用随机种子。', value=config.get("bark_gui", "seed")).style("width:200px;")
-                        input_bark_gui_batch_count = ui.input(label='批量数', placeholder='指定一次批量合成的句子或话语数量。将其设置为1意味着逐句合成一次。', value=config.get("bark_gui", "batch_count")).style("width:200px;")
-            
-            if config.get("webui", "show_card", "tts", "vall_e_x"):  
-                with ui.card().style(card_css):
-                    ui.label("vall_e_x")
-                    with ui.row():
-                        input_vall_e_x_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='VALL-E-X启动后监听的ip端口地址', 
-                            value=config.get("vall_e_x", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;")
-                        select_vall_e_x_language = ui.select(
-                            label='language', 
-                            options={'auto-detect':'auto-detect', 'English':'English', '中文':'中文', '日本語':'日本語', 'Mix':'Mix'}, 
-                            value=config.get("vall_e_x", "language")
-                        ).style("width:200px;")
-
-                        select_vall_e_x_accent = ui.select(
-                            label='accent', 
-                            options={'no-accent':'no-accent', 'English':'English', '中文':'中文', '日本語':'日本語'}, 
-                            value=config.get("vall_e_x", "accent")
-                        ).style("width:200px;")
-
-                        input_vall_e_x_voice_preset = ui.input(label='voice preset', placeholder='VALL-E-X说话人预设名（Prompt name）', value=config.get("vall_e_x", "voice_preset")).style("width:300px;")
-                        input_vall_e_x_voice_preset_file_path = ui.input(label='voice_preset_file_path', placeholder='VALL-E-X说话人预设文件路径（npz）', value=config.get("vall_e_x", "voice_preset_file_path")).style("width:300px;")
-            
             if config.get("webui", "show_card", "tts", "openai_tts"): 
                 with ui.card().style(card_css):
                     ui.label("OpenAI TTS")
@@ -5795,22 +5485,7 @@ def goto_func_page():
                             value=config.get("openai_tts", "voice")
                         ).style("width:200px;")
                         input_openai_tts_api_key = ui.input(label='api key', value=config.get("openai_tts", "api_key"), placeholder='OpenAI API KEY').style("width:200px;")
-            
-            if config.get("webui", "show_card", "tts", "reecho_ai"): 
-                with ui.card().style(card_css):
-                    ui.label("睿声AI")
-                    with ui.row():
-                        input_reecho_ai_Authorization = ui.input(label='API Key', value=config.get("reecho_ai", "Authorization"), placeholder='API Key').style("width:200px;")
-                        input_reecho_ai_model = ui.input(label='模型ID', value=config.get("reecho_ai", "model"), placeholder='要使用的模型ID (目前统一为reecho-neural-voice-001)').style("width:200px;")
-                        input_reecho_ai_voiceId = ui.input(label='角色ID', value=config.get("reecho_ai", "voiceId"), placeholder='要使用的角色ID，必须位于账号的角色列表库中，记得展开详情').style("width:300px;")
-                    with ui.row():
-                        number_reecho_ai_randomness = ui.number(label='多样性', value=config.get("reecho_ai", "randomness"), format='%d', min=0, max=100, step=1, placeholder='多样性 (0-100，默认请填写97)').style("width:100px;").tooltip('多样性 (0-100，默认请填写97)')
-                        number_reecho_ai_stability_boost = ui.number(label='稳定性过滤', value=config.get("reecho_ai", "stability_boost"), format='%d', min=0, max=100, step=1, placeholder='稳定性过滤 (0-100，默认请填写40)').style("width:100px;").tooltip('稳定性过滤 (0-100，默认请填写40)')
-                        input_reecho_ai_promptId = ui.input(label='角色风格 ID', value=config.get("reecho_ai", "promptId"), placeholder='角色风格 ID （默认为default)').style("width:200px;").tooltip('角色风格 ID （默认为default)')
-                        number_reecho_ai_probability_optimization = ui.number(label='概率优选', value=config.get("reecho_ai", "probability_optimization"), format='%d', min=0, max=100, step=1, placeholder='概率优选 (0-100，默认请填写99)').style("width:100px;").tooltip('概率优选 (0-100，默认请填写99)')
-                        switch_reecho_ai_break_clone = ui.switch('减弱风格影响', value=config.get("reecho_ai", "break_clone")).style(switch_internal_css).tooltip('减弱风格影响')
-                        switch_reecho_ai_flash = ui.switch('加速模式生成', value=config.get("reecho_ai", "flash")).style(switch_internal_css).tooltip('加速模式生成，仅V2.0的模型支持')
-                       
+                  
             if config.get("webui", "show_card", "tts", "gradio_tts"): 
                 with ui.card().style(card_css):
                     ui.label("Gradio")
@@ -6038,32 +5713,6 @@ def goto_func_page():
                             input_gpt_sovits_webtts_speed = ui.input(label='语速', value=config.get("gpt_sovits", "webtts", "speed"), placeholder='语速').style("width:100px;")
                             input_gpt_sovits_webtts_emotion = ui.input(label='情感', value=config.get("gpt_sovits", "webtts", "emotion"), placeholder='情感').style("width:100px;")
         
-            if config.get("webui", "show_card", "tts", "clone_voice"): 
-                with ui.card().style(card_css):
-                    ui.label("clone-voice")
-                    with ui.row():
-                        select_clone_voice_type = ui.select(
-                            label='API接口类型', 
-                            options={'tts':'tts'}, 
-                            value=config.get("clone_voice", "type")
-                        ).style("width:100px;")
-                        input_clone_voice_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("clone_voice", "api_ip_port"), 
-                            placeholder='官方程序启动后监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;")
-                    with ui.row():
-                        input_clone_voice_voice = ui.input(label='参考音频路径', value=config.get("clone_voice", "voice"), placeholder='参考音频路径，建议填绝对路径').style("width:200px;")
-                        select_clone_voice_language = ui.select(
-                            label='需要合成的语种', 
-                            options={'zh-cn':'中文', 'ja':'日文', 'en':'英文',"ko":'ko',"es":'es',"de":'de',
-                                     "fr":'fr',"it":'it',"tr":'tr',"ru":'ru',"pt":'pt',"pl":'pl',"nl":'nl',"ar":'ar',"hu":'hu',"cs":'cs'}, 
-                            value=config.get("clone_voice", "language")
-                        ).style("width:200px;")
-                        input_clone_voice_speed = ui.input(label='语速', value=config.get("clone_voice", "speed"), placeholder='语速').style("width:100px;")
             
             if config.get("webui", "show_card", "tts", "azure_tts"): 
                 with ui.card().style(card_css):
@@ -6998,21 +6647,7 @@ def goto_func_page():
                                     "insert_index": -1
                                 }
                             }
-                        elif select_image_recognition_model.value == "blip":
-                            from utils.gpt_model.blip import Blip
-
-                            blip = Blip(config.get("image_recognition", "blip"))
-
-                            resp_content = blip.get_resp_with_img(prompt, screenshot_path)
-
-                            data = {
-                                "type": "reread",
-                                "data": {
-                                    "username": config.get("talk", "username"),
-                                    "content": resp_content,
-                                    "insert_index": -1
-                                }
-                            }
+                        
 
                         if send_to_all:
                             if data is not None:
@@ -7092,7 +6727,7 @@ def goto_func_page():
                     button_image_recognition_enable = ui.switch('启用', value=config.get("image_recognition", "enable")).style(switch_internal_css)
                     select_image_recognition_model = ui.select(
                         label='模型', 
-                        options={'gemini': 'gemini', 'zhipu': '智谱AI', 'blip': 'blip'}, 
+                        options={'gemini': 'gemini', 'zhipu': '智谱AI'}, 
                         value=config.get("image_recognition", "model")
                     ).style("width:150px")
                     
@@ -7162,18 +6797,6 @@ def goto_func_page():
                         value=config.get("image_recognition", "zhipu", "model")
                     ).style("width:150px")
                     input_image_recognition_zhipu_api_key = ui.input(label='API Key', value=config.get("image_recognition", "zhipu", "api_key"), placeholder='智谱 API KEY')
-            
-            with ui.card().style(card_css):
-                ui.label("Blip")
-                with ui.row():
-                    select_image_recognition_blip_model = ui.select(
-                        label='模型', 
-                        options={
-                            'Salesforce/blip-image-captioning-large': 'Salesforce/blip-image-captioning-large',
-                            'Salesforce/blip-image-captioning-base': 'Salesforce/blip-image-captioning-base',
-                        }, 
-                        value=config.get("image_recognition", "blip", "model")
-                    ).style("width:300px")
 
         with ui.tab_panel(assistant_anchor_page).style(tab_panel_css):
             with ui.row():
@@ -7525,12 +7148,8 @@ def goto_func_page():
                     ui.label("大语言模型")
                     with ui.row():
                         switch_webui_show_card_llm_chatgpt = ui.switch('ChatGPT/闻达', value=config.get("webui", "show_card", "llm", "chatgpt")).style(switch_internal_css)
-                        switch_webui_show_card_llm_claude = ui.switch('claude', value=config.get("webui", "show_card", "llm", "claude")).style(switch_internal_css)
-                        switch_webui_show_card_llm_chatglm = ui.switch('chatglm', value=config.get("webui", "show_card", "llm", "chatglm")).style(switch_internal_css)
-                        switch_webui_show_card_llm_qwen = ui.switch('Qwen', value=config.get("webui", "show_card", "llm", "qwen")).style(switch_internal_css)
                         switch_webui_show_card_llm_zhipu = ui.switch('智谱AI', value=config.get("webui", "show_card", "llm", "zhipu")).style(switch_internal_css)
                         switch_webui_show_card_llm_chat_with_file = ui.switch('chat_with_file', value=config.get("webui", "show_card", "llm", "chat_with_file")).style(switch_internal_css)
-                        switch_webui_show_card_llm_langchain_chatglm = ui.switch('langchain_chatglm', value=config.get("webui", "show_card", "llm", "langchain_chatglm")).style(switch_internal_css)
                         switch_webui_show_card_llm_langchain_chatchat = ui.switch('langchain_chatchat', value=config.get("webui", "show_card", "llm", "langchain_chatchat")).style(switch_internal_css)
                         switch_webui_show_card_llm_chatterbot = ui.switch('chatterbot', value=config.get("webui", "show_card", "llm", "chatterbot")).style(switch_internal_css)
                         switch_webui_show_card_llm_text_generation_webui = ui.switch('text_generation_webui', value=config.get("webui", "show_card", "llm", "text_generation_webui")).style(switch_internal_css)
@@ -7538,10 +7157,8 @@ def goto_func_page():
                         switch_webui_show_card_llm_bard = ui.switch('bard', value=config.get("webui", "show_card", "llm", "bard")).style(switch_internal_css)
                         switch_webui_show_card_llm_tongyi = ui.switch('通义千问', value=config.get("webui", "show_card", "llm", "tongyi")).style(switch_internal_css)
                         switch_webui_show_card_llm_tongyixingchen = ui.switch('通义星尘', value=config.get("webui", "show_card", "llm", "tongyixingchen")).style(switch_internal_css)
-                        # switch_webui_show_card_llm_my_qianfan = ui.switch('my_qianfan', value=config.get("webui", "show_card", "llm", "my_qianfan")).style(switch_internal_css)
                         switch_webui_show_card_llm_my_wenxinworkshop = ui.switch('千帆大模型', value=config.get("webui", "show_card", "llm", "my_wenxinworkshop")).style(switch_internal_css)
                         switch_webui_show_card_llm_gemini = ui.switch('gemini', value=config.get("webui", "show_card", "llm", "gemini")).style(switch_internal_css)
-                        switch_webui_show_card_llm_qanything = ui.switch('qanything', value=config.get("webui", "show_card", "llm", "qanything")).style(switch_internal_css)
                         switch_webui_show_card_llm_koboldcpp = ui.switch('koboldcpp', value=config.get("webui", "show_card", "llm", "koboldcpp")).style(switch_internal_css)
                         switch_webui_show_card_llm_anythingllm = ui.switch('AnythingLLM', value=config.get("webui", "show_card", "llm", "anythingllm")).style(switch_internal_css)
                         switch_webui_show_card_llm_gpt4free = ui.switch('GPT4Free', value=config.get("webui", "show_card", "llm", "gpt4free")).style(switch_internal_css)
@@ -7559,13 +7176,9 @@ def goto_func_page():
                         switch_webui_show_card_tts_bert_vits2 = ui.switch('Bert VITS2', value=config.get("webui", "show_card", "tts", "bert_vits2")).style(switch_internal_css)
                         switch_webui_show_card_tts_vits_fast = ui.switch('VITS Fast', value=config.get("webui", "show_card", "tts", "vits_fast")).style(switch_internal_css)
                         switch_webui_show_card_tts_elevenlabs = ui.switch('elevenlabs', value=config.get("webui", "show_card", "tts", "elevenlabs")).style(switch_internal_css)
-                        switch_webui_show_card_tts_bark_gui = ui.switch('bark_gui', value=config.get("webui", "show_card", "tts", "bark_gui")).style(switch_internal_css)
-                        switch_webui_show_card_tts_vall_e_x = ui.switch('vall_e_x', value=config.get("webui", "show_card", "tts", "vall_e_x")).style(switch_internal_css)
                         switch_webui_show_card_tts_openai_tts = ui.switch('openai_tts', value=config.get("webui", "show_card", "tts", "openai_tts")).style(switch_internal_css)
-                        switch_webui_show_card_tts_reecho_ai = ui.switch('reecho_ai', value=config.get("webui", "show_card", "tts", "reecho_ai")).style(switch_internal_css)
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gpt_sovits = ui.switch('gpt_sovits', value=config.get("webui", "show_card", "tts", "gpt_sovits")).style(switch_internal_css)
-                        switch_webui_show_card_tts_clone_voice = ui.switch('clone_voice', value=config.get("webui", "show_card", "tts", "clone_voice")).style(switch_internal_css)
                         switch_webui_show_card_tts_azure_tts = ui.switch('azure_tts', value=config.get("webui", "show_card", "tts", "azure_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_fish_speech = ui.switch('fish_speech', value=config.get("webui", "show_card", "tts", "fish_speech")).style(switch_internal_css)
                         switch_webui_show_card_tts_chattts = ui.switch('ChatTTS', value=config.get("webui", "show_card", "tts", "chattts")).style(switch_internal_css)
@@ -7624,7 +7237,7 @@ def goto_func_page():
                 ui.label('介绍').style("font-size:24px;")
                 ui.label('AI Vtuber 是一款结合了最先进技术的虚拟AI主播。它的核心是一系列高效的人工智能模型，包括 ChatterBot、GPT、Claude、langchain、chatglm、text-generation-webui、讯飞星火、智谱AI、谷歌Bard、文心一言 和 通义星尘。这些模型既可以在本地运行，也可以通过云端服务提供支持。')
                 ui.label('AI Vtuber 的外观由 Live2D、Vtube Studio、xuniren 和 UE5 结合 Audio2Face 技术打造，为用户提供了一个生动、互动的虚拟形象。这使得 AI Vtuber 能够在各大直播平台，如 Bilibili、抖音、快手、斗鱼、YouTube 和 Twitch，进行实时互动直播。当然，它也可以在本地环境中与您进行个性化对话。')
-                ui.label('为了使交流更加自然，AI Vtuber 使用了先进的自然语言处理技术，结合文本转语音系统，如 Edge-TTS、VITS-Fast、elevenlabs、bark-gui、VALL-E-X、睿声AI、genshinvoice.top、 tts.ai-lab.top和GPT-SoVITS。这不仅让它能够生成流畅的回答，还可以通过 so-vits-svc 和 DDSP-SVC 实现声音的变化，以适应不同的场景和角色。')
+                ui.label('为了使交流更加自然，AI Vtuber 使用了先进的自然语言处理技术，结合文本转语音系统，如 Edge-TTS、VITS-Fast、elevenlabs、VALL-E-X、睿声AI、 tts.ai-lab.top和GPT-SoVITS。这不仅让它能够生成流畅的回答，还可以通过 so-vits-svc 和 DDSP-SVC 实现声音的变化，以适应不同的场景和角色。')
                 ui.label('此外，AI Vtuber 还能够通过特定指令与 Stable Diffusion 协作，展示画作。用户还可以自定义文案，让 AI Vtuber 循环播放，以满足不同场合的需求。')
             with ui.card().style(card_css):
                 ui.label('许可证').style("font-size:24px;")

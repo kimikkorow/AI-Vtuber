@@ -95,7 +95,7 @@ class Qwen:
         return query
 
 
-    # 调用chatglm接口，获取返回内容
+    # 调用接口，获取返回内容
     def get_resp(self, username, prompt):
         # construct query
         query = self.construct_query(username, prompt)
