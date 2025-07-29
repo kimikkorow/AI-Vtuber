@@ -2270,15 +2270,6 @@ def goto_func_page():
                         "bot_user_id": (input_claude_bot_user_id, 'str'),
                     }
 
-                if config.get("webui", "show_card", "llm", "chatglm"):
-                    config_mapping["chatglm"] = {
-                        "api_ip_port": (input_chatglm_api_ip_port, 'str'),
-                        "max_length": (input_chatglm_max_length, 'int'),
-                        "top_p": (input_chatglm_top_p, 'float'),
-                        "temperature": (input_chatglm_temperature, 'float'),
-                        "history_enable": (switch_chatglm_history_enable, 'bool'),
-                        "history_max_len": (input_chatglm_history_max_len, 'int'),
-                    }
                 if config.get("webui", "show_card", "llm", "qwen"):
                     config_mapping["qwen"] = {
                         "api_ip_port": (input_qwen_api_ip_port, 'str'),
@@ -3307,7 +3298,6 @@ def goto_func_page():
                             "llm": {
                                 "chatgpt": (switch_webui_show_card_llm_chatgpt, 'bool'),
                                 "claude": (switch_webui_show_card_llm_claude, 'bool'),
-                                "chatglm": (switch_webui_show_card_llm_chatglm, 'bool'),
                                 "qwen": (switch_webui_show_card_llm_qwen, 'bool'),
                                 "zhipu": (switch_webui_show_card_llm_zhipu, 'bool'),
                                 "chat_with_file": (switch_webui_show_card_llm_chat_with_file, 'bool'),
@@ -3510,7 +3500,6 @@ def goto_func_page():
         'chatgpt': 'ChatGPT/闻达', 
         'claude': 'Claude', 
         'claude2': 'Claude2',
-        'chatglm': 'ChatGLM',
         'qwen': 'Qwen',
         'chat_with_file': 'chat_with_file',
         'chatterbot': 'Chatterbot',
@@ -4620,29 +4609,6 @@ def goto_func_page():
                             input_claude2_proxies_socks5 = ui.input(label='proxies_socks5', placeholder='socks5代理地址，默认为 socks://127.0.0.1:10808', value=config.get("claude2", "proxies", "socks5"))
                             input_claude2_proxies_socks5.style("width:400px") 
             
-            if config.get("webui", "show_card", "llm", "chatglm"):
-                with ui.card().style(card_css):
-                    ui.label("ChatGLM1、2")
-                    with ui.row():
-                        input_chatglm_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='ChatGLM的API版本运行后的服务链接（需要完整的URL）', 
-                            value=config.get("chatglm", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                        input_chatglm_api_ip_port.style("width:400px")
-                        input_chatglm_max_length = ui.input(label='最大长度限制', placeholder='生成回答的最大长度限制，以令牌数或字符数为单位。', value=config.get("chatglm", "max_length"))
-                        input_chatglm_max_length.style("width:200px")
-                        input_chatglm_top_p = ui.input(label='前p个选择', placeholder='也称为 Nucleus采样。控制模型生成时选择概率的阈值范围。', value=config.get("chatglm", "top_p"))
-                        input_chatglm_top_p.style("width:200px")
-                        input_chatglm_temperature = ui.input(label='温度', placeholder='温度参数，控制生成文本的随机性。较高的温度值会产生-更多的随机性和多样性。', value=config.get("chatglm", "temperature"))
-                        input_chatglm_temperature.style("width:200px")
-                    with ui.row():
-                        switch_chatglm_history_enable = ui.switch('上下文记忆', value=config.get("chatglm", "history_enable")).style(switch_internal_css)
-                        input_chatglm_history_max_len = ui.input(label='最大记忆长度', placeholder='最大记忆的上下文字符数量，不建议设置过大，容易爆显存，自行根据情况配置', value=config.get("chatglm", "history_max_len"))
-                        input_chatglm_history_max_len.style("width:200px")
             
             if config.get("webui", "show_card", "llm", "qwen"):
                 with ui.card().style(card_css):
@@ -7526,7 +7492,6 @@ def goto_func_page():
                     with ui.row():
                         switch_webui_show_card_llm_chatgpt = ui.switch('ChatGPT/闻达', value=config.get("webui", "show_card", "llm", "chatgpt")).style(switch_internal_css)
                         switch_webui_show_card_llm_claude = ui.switch('claude', value=config.get("webui", "show_card", "llm", "claude")).style(switch_internal_css)
-                        switch_webui_show_card_llm_chatglm = ui.switch('chatglm', value=config.get("webui", "show_card", "llm", "chatglm")).style(switch_internal_css)
                         switch_webui_show_card_llm_qwen = ui.switch('Qwen', value=config.get("webui", "show_card", "llm", "qwen")).style(switch_internal_css)
                         switch_webui_show_card_llm_zhipu = ui.switch('智谱AI', value=config.get("webui", "show_card", "llm", "zhipu")).style(switch_internal_css)
                         switch_webui_show_card_llm_chat_with_file = ui.switch('chat_with_file', value=config.get("webui", "show_card", "llm", "chat_with_file")).style(switch_internal_css)

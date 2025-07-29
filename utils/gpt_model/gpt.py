@@ -9,7 +9,6 @@
 """
 from utils.my_log import logger
 
-from utils.gpt_model.chatglm import Chatglm
 from utils.gpt_model.qwen import Qwen
 from utils.gpt_model.chatgpt import Chatgpt
 from utils.gpt_model.claude import Claude
@@ -44,7 +43,6 @@ class GPT_Model:
         model_classes = {
             "claude": Claude,
             "claude2": Claude2,
-            "chatglm": Chatglm,
             "qwen": Qwen,
             "text_generation_webui": TEXT_GENERATION_WEBUI,
             "sparkdesk": SPARKDESK,
