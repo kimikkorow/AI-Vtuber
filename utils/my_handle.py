@@ -146,8 +146,6 @@ class My_handle(metaclass=SingletonMeta):
             新增LLM后，这边先定义下各个变量，下面会用到
             """
             self.chatgpt = None
-            self.claude = None
-            self.claude2 = None
             self.chat_with_file = None
             self.text_generation_webui = None
             self.sparkdesk = None
@@ -168,7 +166,7 @@ class My_handle(metaclass=SingletonMeta):
 
             self.image_recognition_model = None
 
-            self.chat_type_list = ["chatgpt", "claude", "claude2", "chat_with_file", "text_generation_webui", \
+            self.chat_type_list = ["chatgpt", "chat_with_file", "text_generation_webui", \
                     "sparkdesk",  "langchain_chatchat", "zhipu", "bard", "tongyi", \
                     "tongyixingchen", "my_wenxinworkshop", "gemini", "koboldcpp", "anythingllm", "gpt4free", \
                     "custom_llm", "llm_tpu", "dify", "volcengine"]
@@ -457,22 +455,12 @@ class My_handle(metaclass=SingletonMeta):
         return My_handle.audio.get_audio_info()
 
     def get_chat_model(self, chat_type, config):
-        if chat_type == "claude":
-            self.claude = GPT_MODEL.get(chat_type)
-            if not self.claude.reset_claude():
-                logger.error("重置Claude会话失败喵~")
-        elif chat_type == "claude2":
-            GPT_MODEL.set_model_config(chat_type, config.get(chat_type))
-            self.claude2 = GPT_MODEL.get(chat_type)
-            if self.claude2.get_organization_id() is None:
-                logger.error("重置Claude2会话失败喵~")
+        if chat_type in ["chatterbot", "chat_with_file"]:
+            # 对这些类型做特殊处理
+            pass
         else:
-            if chat_type in ["chatterbot", "chat_with_file"]:
-                # 对这些类型做特殊处理
-                pass
-            else:
-                GPT_MODEL.set_model_config(chat_type, config.get(chat_type))
-            self.__dict__[chat_type] = GPT_MODEL.get(chat_type)
+            GPT_MODEL.set_model_config(chat_type, config.get(chat_type))
+        self.__dict__[chat_type] = GPT_MODEL.get(chat_type)
 
     def get_vision_model(self, chat_type, config):
         GPT_MODEL.set_vision_model_config(chat_type, config)
@@ -506,7 +494,6 @@ class My_handle(metaclass=SingletonMeta):
         # 设置GPT_Model全局模型列表
         GPT_MODEL.set_model_config("openai", My_handle.config.get("openai"))
         GPT_MODEL.set_model_config("chatgpt", My_handle.config.get("chatgpt"))
-        GPT_MODEL.set_model_config("claude", My_handle.config.get("claude"))  
 
         # 聊天相关类实例化
         self.handle_chat_type()
@@ -1566,8 +1553,6 @@ class My_handle(metaclass=SingletonMeta):
                 # 新增LLM需要在这里追加
                 chat_model_methods = {
                     "chatgpt": lambda: self.chatgpt.get_gpt_resp(data["username"], data["content"]),
-                    "claude": lambda: self.claude.get_resp(data["content"]),
-                    "claude2": lambda: self.claude2.get_resp(data["content"]),
                     "chatterbot": lambda: self.bot.get_response(data["content"]).text,
                     "chat_with_file": lambda: self.chat_with_file.get_model_resp(data["content"]),
                     "text_generation_webui": lambda: self.text_generation_webui.get_resp(data["content"]),

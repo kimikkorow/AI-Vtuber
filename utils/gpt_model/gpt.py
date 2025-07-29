@@ -10,8 +10,6 @@
 from utils.my_log import logger
 
 from utils.gpt_model.chatgpt import Chatgpt
-from utils.gpt_model.claude import Claude
-from utils.gpt_model.claude2 import Claude2
 from utils.gpt_model.text_generation_webui import TEXT_GENERATION_WEBUI
 from utils.gpt_model.sparkdesk import SPARKDESK
 from utils.gpt_model.langchain_chatchat import Langchain_ChatChat
@@ -37,8 +35,6 @@ class GPT_Model:
     
     def set_model_config(self, model_name, config):
         model_classes = {
-            "claude": Claude,
-            "claude2": Claude2,
             "text_generation_webui": TEXT_GENERATION_WEBUI,
             "sparkdesk": SPARKDESK,
             "langchain_chatchat": Langchain_ChatChat,

@@ -2264,11 +2264,6 @@ def goto_func_page():
 
                     config_data = update_config(config_mapping, config, config_data, "llm")
 
-                if config.get("webui", "show_card", "llm", "claude"):
-                    config_mapping["claude"] = {
-                        "slack_user_token": (input_claude_slack_user_token, 'str'),
-                        "bot_user_id": (input_claude_bot_user_id, 'str'),
-                    }
 
                 if config.get("webui", "show_card", "llm", "chat_with_file"):
                     config_mapping["chat_with_file"] = {
@@ -2510,13 +2505,6 @@ def goto_func_page():
 
                 config_data = update_config(config_mapping, config, config_data, "llm")
 
-                if config.get("webui", "show_card", "llm", "claude"):
-                    config_data["claude2"]["cookie"] = input_claude2_cookie.value
-                    config_data["claude2"]["use_proxy"] = switch_claude2_use_proxy.value
-                    config_data["claude2"]["proxies"]["http"] = input_claude2_proxies_http.value
-                    config_data["claude2"]["proxies"]["https"] = input_claude2_proxies_https.value
-                    config_data["claude2"]["proxies"]["socks5"] = input_claude2_proxies_socks5.value
-                    
             """
             TTS
             """
@@ -3269,7 +3257,6 @@ def goto_func_page():
                             },
                             "llm": {
                                 "chatgpt": (switch_webui_show_card_llm_chatgpt, 'bool'),
-                                "claude": (switch_webui_show_card_llm_claude, 'bool'),
                                 "zhipu": (switch_webui_show_card_llm_zhipu, 'bool'),
                                 "chat_with_file": (switch_webui_show_card_llm_chat_with_file, 'bool'),
                                 "langchain_chatchat": (switch_webui_show_card_llm_langchain_chatchat, 'bool'),
@@ -3467,8 +3454,6 @@ def goto_func_page():
         'none': '不启用', 
         'reread': '复读机', 
         'chatgpt': 'ChatGPT/闻达', 
-        'claude': 'Claude', 
-        'claude2': 'Claude2',
         'chat_with_file': 'chat_with_file',
         'chatterbot': 'Chatterbot',
         'text_generation_webui': 'text_generation_webui',
@@ -4551,36 +4536,13 @@ def goto_func_page():
 
                         input_chatgpt_preset = ui.input(label='预设', placeholder='用于指定一组预定义的设置，以便模型更好地适应特定的对话场景。', value=config.get("chatgpt", "preset")).style("width:500px") 
 
-            if config.get("webui", "show_card", "llm", "claude"):
-                with ui.card().style(card_css):
-                    with ui.card().style(card_css):
-                        ui.label("Claude")
-                        with ui.row():
-                            input_claude_slack_user_token = ui.input(label='slack_user_token', placeholder='Slack平台配置的用户Token，参考文档的Claude板块进行配置', value=config.get("claude", "slack_user_token"))
-                            input_claude_slack_user_token.style("width:400px")
-                            input_claude_bot_user_id = ui.input(label='bot_user_id', placeholder='Slack平台添加的Claude显示的成员ID，参考文档的Claude板块进行配置', value=config.get("claude", "bot_user_id"))
-                            input_claude_slack_user_token.style("width:400px") 
-                
-                    with ui.card().style(card_css):
-                        ui.label("Claude2")
-                        with ui.row():
-                            input_claude2_cookie = ui.input(label='cookie', placeholder='claude.ai官网，打开F12，随便提问抓个包，请求头cookie配置于此', value=config.get("claude2", "cookie"))
-                            input_claude2_cookie.style("width:400px")
-                            switch_claude2_use_proxy = ui.switch('启用代理', value=config.get("claude2", "use_proxy")).style(switch_internal_css)
-                        with ui.row():
-                            input_claude2_proxies_http = ui.input(label='proxies_http', placeholder='http代理地址，默认为 http://127.0.0.1:10809', value=config.get("claude2", "proxies", "http"))
-                            input_claude2_proxies_http.style("width:400px") 
-                            input_claude2_proxies_https = ui.input(label='proxies_https', placeholder='https代理地址，默认为 http://127.0.0.1:10809', value=config.get("claude2", "proxies", "https"))
-                            input_claude2_proxies_https.style("width:400px")
-                            input_claude2_proxies_socks5 = ui.input(label='proxies_socks5', placeholder='socks5代理地址，默认为 socks://127.0.0.1:10808', value=config.get("claude2", "proxies", "socks5"))
-                            input_claude2_proxies_socks5.style("width:400px") 
             
             
             if config.get("webui", "show_card", "llm", "chat_with_file"):
                 with ui.card().style(card_css):
                     ui.label("chat_with_file")
                     with ui.row():
-                        lines = ["claude", "openai_gpt", "openai_vector_search"]
+                        lines = [ "openai_gpt", "openai_vector_search"]
                         data_json = {}
                         for line in lines:
                             data_json[line] = line
@@ -7344,7 +7306,6 @@ def goto_func_page():
                     ui.label("大语言模型")
                     with ui.row():
                         switch_webui_show_card_llm_chatgpt = ui.switch('ChatGPT/闻达', value=config.get("webui", "show_card", "llm", "chatgpt")).style(switch_internal_css)
-                        switch_webui_show_card_llm_claude = ui.switch('claude', value=config.get("webui", "show_card", "llm", "claude")).style(switch_internal_css)
                         switch_webui_show_card_llm_zhipu = ui.switch('智谱AI', value=config.get("webui", "show_card", "llm", "zhipu")).style(switch_internal_css)
                         switch_webui_show_card_llm_chat_with_file = ui.switch('chat_with_file', value=config.get("webui", "show_card", "llm", "chat_with_file")).style(switch_internal_css)
                         switch_webui_show_card_llm_langchain_chatchat = ui.switch('langchain_chatchat', value=config.get("webui", "show_card", "llm", "langchain_chatchat")).style(switch_internal_css)
