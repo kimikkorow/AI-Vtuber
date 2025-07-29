@@ -2657,22 +2657,6 @@ def goto_func_page():
                         "region": (input_azure_tts_region, 'str'),
                         "voice_name": (input_azure_tts_voice_name, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "chattts"):
-                    config_mapping["chattts"] = {
-                        "type": (select_chattts_type, 'str'),
-                        "api_ip_port": (input_chattts_api_ip_port, 'str'),
-                        "gradio_ip_port": (input_chattts_gradio_ip_port, 'str'),
-                        "temperature": (input_chattts_temperature, 'float'),
-                        "audio_seed_input": (input_chattts_audio_seed_input, 'int'),
-                        "top_p": (input_chattts_top_p, 'float'),
-                        "top_k": (input_chattts_top_k, 'int'),
-                        "text_seed_input": (input_chattts_text_seed_input, 'int'),
-                        "refine_text_flag": (switch_chattts_refine_text_flag, 'bool'),
-                        "api": {
-                            "seed": (input_chattts_api_seed, 'int'),
-                            "media_type": (input_chattts_api_media_type, 'str'),
-                        },
-                    }
                 if config.get("webui", "show_card", "tts", "cosyvoice"):
                     config_mapping["cosyvoice"] = {
                         "type": (select_cosyvoice_type, 'str'),
@@ -3173,7 +3157,6 @@ def goto_func_page():
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
                                 "gpt_sovits": (switch_webui_show_card_tts_gpt_sovits, 'bool'),
                                 "azure_tts": (switch_webui_show_card_tts_azure_tts, 'bool'),
-                                "chattts": (switch_webui_show_card_tts_chattts, 'bool'),
                                 "cosyvoice": (switch_webui_show_card_tts_cosyvoice, 'bool'),
                                 "f5_tts": (switch_webui_show_card_tts_f5_tts, 'bool'),
                                 "multitts": (switch_webui_show_card_tts_multitts, 'bool'),
@@ -3316,7 +3299,6 @@ def goto_func_page():
         'gradio_tts': 'Gradio',
         'gpt_sovits': 'GPT_SoVITS',
         'azure_tts': 'azure_tts',
-        'chattts': 'ChatTTS',
         'cosyvoice': 'CosyVoice',
         'f5_tts': 'F5-TTS',
         'multitts': 'MultiTTS',
@@ -5647,43 +5629,6 @@ def goto_func_page():
                         input_azure_tts_voice_name = ui.input(label='说话人名', value=config.get("azure_tts", "voice_name"), placeholder='Speech Studio平台试听获取说话人名').style("width:200px;")
             
             
-            if config.get("webui", "show_card", "tts", "chattts"): 
-                with ui.card().style(card_css):
-                    ui.label("ChatTTS")
-                    with ui.row():
-                        select_chattts_type = ui.select(
-                            label='类型', 
-                            options={"api": "api", "gradio_0621": "gradio_0621", "gradio": "gradio"}, 
-                            value=config.get("chattts", "type")
-                        ).style("width:150px").tooltip("对接的API类型")
-                        input_chattts_api_ip_port = ui.input(
-                            label='API地址', 
-                            value=config.get("chattts", "api_ip_port"), 
-                            placeholder='刘悦佬接口程序启动后api监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;").tooltip("对接新版刘悦佬整合包的api接口，填api的地址")
-                        input_chattts_gradio_ip_port = ui.input(
-                            label='Gradio API地址', 
-                            value=config.get("chattts", "gradio_ip_port"), 
-                            placeholder='官方webui程序启动后gradio监听的地址',
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;").tooltip("对接旧版webui的gradio接口，填webui的地址")
-                        input_chattts_temperature = ui.input(label='温度', value=config.get("chattts", "temperature"), placeholder='默认：0.3').style("width:100px;").tooltip("Audio temperature,越大越发散，越小越保守")
-                        input_chattts_audio_seed_input = ui.input(label='声音种子', value=config.get("chattts", "audio_seed_input"), placeholder='默认：-1').style("width:100px;").tooltip("声音种子,-1随机，1女生,4女生,8男生")
-                        input_chattts_top_p = ui.input(label='top_p', value=config.get("chattts", "top_p"), placeholder='默认：0.7').style("width:100px;").tooltip("top_p")
-                        input_chattts_top_k = ui.input(label='top_k', value=config.get("chattts", "top_k"), placeholder='默认：20').style("width:100px;").tooltip("top_k")
-                        input_chattts_text_seed_input = ui.input(label='text_seed_input', value=config.get("chattts", "text_seed_input"), placeholder='默认：42').style("width:100px;").tooltip("text_seed_input")
-                        switch_chattts_refine_text_flag = ui.switch('refine_text', value=config.get("chattts", "refine_text_flag")).style(switch_internal_css)
-               
-                    with ui.card().style(card_css):
-                        ui.label("API相关配置")
-                        with ui.row():    
-                            input_chattts_api_seed = ui.input(label='声音种子', value=config.get("chattts", "api", "seed"), placeholder='默认：2581').style("width:200px;").tooltip("声音种子")
-                            input_chattts_api_media_type = ui.input(label='音频格式', value=config.get("chattts", "api", "media_type"), placeholder='默认：wav').style("width:200px;").tooltip("音频格式，没事不建议改")
             if config.get("webui", "show_card", "tts", "cosyvoice"): 
                 with ui.card().style(card_css):
                     ui.label("CosyVoice")
@@ -6993,7 +6938,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gpt_sovits = ui.switch('gpt_sovits', value=config.get("webui", "show_card", "tts", "gpt_sovits")).style(switch_internal_css)
                         switch_webui_show_card_tts_azure_tts = ui.switch('azure_tts', value=config.get("webui", "show_card", "tts", "azure_tts")).style(switch_internal_css)
-                        switch_webui_show_card_tts_chattts = ui.switch('ChatTTS', value=config.get("webui", "show_card", "tts", "chattts")).style(switch_internal_css)
                         switch_webui_show_card_tts_cosyvoice = ui.switch('CosyVoice', value=config.get("webui", "show_card", "tts", "cosyvoice")).style(switch_internal_css)
                         switch_webui_show_card_tts_f5_tts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "f5_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_multitts = ui.switch('F5-TTS', value=config.get("webui", "show_card", "tts", "multitts")).style(switch_internal_css)

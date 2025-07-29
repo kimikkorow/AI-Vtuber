@@ -744,22 +744,6 @@
     "region": "japanwest",
     "voice_name": "zh-CN-XiaoyanNeural"
   },
-  "chattts": {
-    "type": "gradio_0621",
-    "api_ip_port": "http://127.0.0.1:9880",
-    "gradio_ip_port": "http://127.0.0.1:8080",
-    "temperature": 0.3,
-    "audio_seed_input": 2,
-    "top_p": 0.7,
-    "top_k": 20,
-    "text_seed_input": 42,
-    "refine_text_flag": true,
-    "api": {
-      "media_type": "wav",
-      "seed": 2581,
-      "streaming": 0
-    }
-  },
   "cosyvoice": {
     "type": "gradio_0707",
     "gradio_ip_port": "http://127.0.0.1:9886",
@@ -1863,7 +1847,6 @@
         "gradio_tts": true,
         "gpt_sovits": true,
         "azure_tts": true,
-        "chattts": true,
         "cosyvoice": true,
         "f5_tts": true,
         "multitts": true,
