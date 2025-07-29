@@ -19,7 +19,6 @@ from utils.gpt_model.zhipu import Zhipu
 from utils.gpt_model.bard import Bard_api
 from utils.gpt_model.tongyi import TongYi
 from utils.gpt_model.tongyixingchen import TongYiXingChen
-from utils.gpt_model.my_qianfan import My_QianFan
 from utils.gpt_model.my_wenxinworkshop import My_WenXinWorkShop
 from utils.gpt_model.gemini import Gemini
 from utils.gpt_model.koboldcpp import Koboldcpp
@@ -48,7 +47,6 @@ class GPT_Model:
             "tongyi": TongYi,
             "tongyixingchen": TongYiXingChen,
             "my_wenxinworkshop": My_WenXinWorkShop,
-            "my_qianfan": My_QianFan,
             "gemini": Gemini,
             "koboldcpp": Koboldcpp,
             "anythingllm": AnythingLLM,

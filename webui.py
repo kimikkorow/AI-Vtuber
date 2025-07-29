@@ -4942,38 +4942,6 @@ def goto_func_page():
                         
 
 
-            # with ui.card().style(card_css):
-            #     ui.label("千帆大模型（兼容问题暂不启用）")
-            #     with ui.row():
-            #         input_my_qianfan_access_key = ui.input(label='access_key', value=config.get("my_qianfan", "access_key"), placeholder='官网右上角安全认证申请开通access_key')
-            #         input_my_qianfan_secret_key = ui.input(label='secret_key', value=config.get("my_qianfan", "secret_key"), placeholder='官网右上角安全认证申请开通access_key')
-            #         lines = [
-            #             'ERNIE-Bot-turbo', 
-            #             'ERNIE-Bot',
-            #             'ERNIE-Bot-4',
-            #             'BLOOMZ-7B',
-            #             'Llama-2-7b-chat',
-            #             'Llama-2-13b-chat',
-            #             'Llama-2-70b-chat',
-            #             'Qianfan-BLOOMZ-7B-compressed',
-            #             'Qianfan-Chinese-Llama-2-7B',
-            #             'ChatGLM2-6B-32K',
-            #             'AquilaChat-7B'
-            #         ]
-            #         data_json = {}
-            #         for line in lines:
-            #             data_json[line] = line
-            #         select_my_qianfan_model = ui.select(
-            #             label='模型', 
-            #             options=data_json, 
-            #             value=config.get("my_qianfan", "model")
-            #         ).style("width:150px")
-            #         switch_my_qianfan_history_enable = ui.switch('上下文记忆', value=config.get("my_qianfan", "history_enable")).style(switch_internal_css)
-            #         input_my_qianfan_history_max_len = ui.input(label='最大记忆长度', value=config.get("my_qianfan", "history_max_len"), placeholder='最长能记忆的问答字符串长度，超长会丢弃最早记忆的内容，请慎用！配置过大可能会有丢大米')
-            #     with ui.row():
-            #         input_my_qianfan_temperature = ui.input(label='温度', value=config.get("my_qianfan", "temperature"), placeholder='控制生成文本的随机性。较高的温度值会使生成的文本更随机和多样化，而较低的温度值会使生成的文本更加确定和一致。').style("width:200px;")
-            #         input_my_qianfan_top_p = ui.input(label='前p个选择', value=config.get("my_qianfan", "top_p"), placeholder='Nucleus采样。这个参数控制模型从累积概率大于一定阈值的令牌中进行采样。较高的值会产生更多的多样性，较低的值会产生更少但更确定的回答。').style("width:200px;")
-            #         input_my_qianfan_penalty_score = ui.input(label='惩罚得分', value=config.get("my_qianfan", "penalty_score"), placeholder='在生成文本时对某些词语或模式施加的惩罚。这是一种调节生成内容的机制，用来减少或避免不希望出现的内容。').style("width:200px;")
             
             if config.get("webui", "show_card", "llm", "gemini"):
                 with ui.card().style(card_css):
@@ -7386,7 +7354,6 @@ def goto_func_page():
                         switch_webui_show_card_llm_bard = ui.switch('bard', value=config.get("webui", "show_card", "llm", "bard")).style(switch_internal_css)
                         switch_webui_show_card_llm_tongyi = ui.switch('通义千问', value=config.get("webui", "show_card", "llm", "tongyi")).style(switch_internal_css)
                         switch_webui_show_card_llm_tongyixingchen = ui.switch('通义星尘', value=config.get("webui", "show_card", "llm", "tongyixingchen")).style(switch_internal_css)
-                        # switch_webui_show_card_llm_my_qianfan = ui.switch('my_qianfan', value=config.get("webui", "show_card", "llm", "my_qianfan")).style(switch_internal_css)
                         switch_webui_show_card_llm_my_wenxinworkshop = ui.switch('千帆大模型', value=config.get("webui", "show_card", "llm", "my_wenxinworkshop")).style(switch_internal_css)
                         switch_webui_show_card_llm_gemini = ui.switch('gemini', value=config.get("webui", "show_card", "llm", "gemini")).style(switch_internal_css)
                         switch_webui_show_card_llm_koboldcpp = ui.switch('koboldcpp', value=config.get("webui", "show_card", "llm", "koboldcpp")).style(switch_internal_css)

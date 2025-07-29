@@ -156,7 +156,6 @@ class My_handle(metaclass=SingletonMeta):
             self.bard_api = None
             self.tongyi = None
             self.tongyixingchen = None
-            self.my_qianfan = None
             self.my_wenxinworkshop = None
             self.gemini = None
             self.koboldcpp = None
@@ -171,7 +170,7 @@ class My_handle(metaclass=SingletonMeta):
 
             self.chat_type_list = ["chatgpt", "claude", "claude2", "chat_with_file", "text_generation_webui", \
                     "sparkdesk",  "langchain_chatchat", "zhipu", "bard", "tongyi", \
-                    "tongyixingchen", "my_qianfan", "my_wenxinworkshop", "gemini", "koboldcpp", "anythingllm", "gpt4free", \
+                    "tongyixingchen", "my_wenxinworkshop", "gemini", "koboldcpp", "anythingllm", "gpt4free", \
                     "custom_llm", "llm_tpu", "dify", "volcengine"]
 
             # 配置加载
@@ -1578,7 +1577,6 @@ class My_handle(metaclass=SingletonMeta):
                     "bard": lambda: self.bard_api.get_resp(data["content"]),
                     "tongyi": lambda: self.tongyi.get_resp(data["content"]),
                     "tongyixingchen": lambda: self.tongyixingchen.get_resp(data["content"]),
-                    "my_qianfan": lambda: self.my_qianfan.get_resp(data["content"]),
                     "my_wenxinworkshop": lambda: self.my_wenxinworkshop.get_resp(data["content"]),
                     "gemini": lambda: self.gemini.get_resp(data["content"]),
                     "koboldcpp": lambda: self.koboldcpp.get_resp({"prompt": data["content"]}),

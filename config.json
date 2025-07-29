@@ -467,16 +467,6 @@
     "history_max_len": 300,
     "stream": true
   },
-  "my_qianfan": {
-    "model": "ERNIE-Bot-turbo",
-    "access_key": "",
-    "secret_key": "",
-    "top_p": 0.8,
-    "temperature": 0.9,
-    "penalty_score": 1.0,
-    "history_enable": true,
-    "history_max_len": 300
-  },
   "my_wenxinworkshop": {
     "type": "千帆大模型",
     "model": "ERNIEBot",
