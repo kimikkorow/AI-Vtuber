@@ -338,16 +338,6 @@
       "socks5": "socks://127.0.0.1:10808"
     }
   },
-  "qwen": {
-    "api_ip_port": "http://localhost:8000/v1/chat/completions",
-    "max_length": 4096,
-    "top_p": 0.5,
-    "temperature": 0.95,
-    "max_new_tokens": 250,
-    "history_enable": true,
-    "history_max_len": 20,
-    "preset": "请扮演一个AI虚拟主播。不要回答任何敏感问题！不要强调你是主播，只需要回答问题！"
-  },
   "sparkdesk": {
     "type": "api",
     "cookie": "",
@@ -2001,7 +1991,6 @@
       "llm": {
         "chatgpt": true,
         "claude": true,
-        "qwen": true,
         "zhipu": true,
         "chat_with_file": true,
         "langchain_chatglm": true,
