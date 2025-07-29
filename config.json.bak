@@ -684,16 +684,6 @@
     "length": "1.0",
     "lang": "zh"
   },
-  "bark_gui": {
-    "api_ip_port": "http://127.0.0.1:7860",
-    "spk": "zh_speaker_0",
-    "generation_temperature": 0.6,
-    "waveform_temperature": 0.7,
-    "end_of_sentence_probability": 0.05,
-    "quick_generation": true,
-    "seed": -1.0,
-    "batch_count": 1
-  },
   "vall_e_x": {
     "api_ip_port": "http://127.0.0.1:7860",
     "language": "auto-detect",
@@ -1972,7 +1962,6 @@
         "elevenlabs": true,
         "genshinvoice_top": true,
         "tts_ai_lab_top": true,
-        "bark_gui": true,
         "vall_e_x": true,
         "openai_tts": true,
         "reecho_ai": true,

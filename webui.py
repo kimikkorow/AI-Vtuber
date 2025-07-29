@@ -2592,17 +2592,7 @@ def goto_func_page():
                         "voice": (input_elevenlabs_voice, 'str'),
                         "model": (input_elevenlabs_model, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "bark_gui"):
-                    config_mapping["bark_gui"] = {
-                        "api_ip_port": (input_bark_gui_api_ip_port, 'str'),
-                        "spk": (input_bark_gui_spk, 'str'),
-                        "generation_temperature": (input_bark_gui_generation_temperature, 'float'),
-                        "waveform_temperature": (input_bark_gui_waveform_temperature, 'float'),
-                        "end_of_sentence_probability": (input_bark_gui_end_of_sentence_probability, 'float'),
-                        "quick_generation": (switch_bark_gui_quick_generation, 'bool'),
-                        "seed": (input_bark_gui_seed, 'float'),
-                        "batch_count": (input_bark_gui_batch_count, 'int'),
-                    }
+                
                 if config.get("webui", "show_card", "tts", "vall_e_x"):
                     config_mapping["vall_e_x"] = {
                         "api_ip_port": (input_vall_e_x_api_ip_port, 'str'),
@@ -3279,7 +3269,6 @@ def goto_func_page():
                                 "bert_vits2": (switch_webui_show_card_tts_bert_vits2, 'bool'),
                                 "vits_fast": (switch_webui_show_card_tts_vits_fast, 'bool'),
                                 "elevenlabs": (switch_webui_show_card_tts_elevenlabs, 'bool'),
-                                "bark_gui": (switch_webui_show_card_tts_bark_gui, 'bool'),
                                 "vall_e_x": (switch_webui_show_card_tts_vall_e_x, 'bool'),
                                 "openai_tts": (switch_webui_show_card_tts_openai_tts, 'bool'),
                                 "reecho_ai": (switch_webui_show_card_tts_reecho_ai, 'bool'),
@@ -3427,9 +3416,6 @@ def goto_func_page():
         'bert_vits2': 'bert_vits2',
         'vits_fast': 'VITS-Fast', 
         'elevenlabs': 'elevenlabs',
-        #'genshinvoice_top': 'genshinvoice_top',
-        #'tts_ai_lab_top': 'tts_ai_lab_top',
-        'bark_gui': 'bark_gui',
         'vall_e_x': 'VALL-E-X',
         'openai_tts': 'OpenAI TTS',
         'reecho_ai': '睿声AI',
@@ -5502,21 +5488,6 @@ def goto_func_page():
                         input_elevenlabs_model = ui.input(label='模型', placeholder='选择的模型', value=config.get("elevenlabs", "model"))
             
             
-            if config.get("webui", "show_card", "tts", "bark_gui"):    
-                with ui.card().style(card_css):
-                    ui.label("bark_gui")
-                    with ui.row():
-                        input_bark_gui_api_ip_port = ui.input(label='API地址', placeholder='bark-gui开启webui后监听的IP和端口地址', value=config.get("bark_gui", "api_ip_port")).style("width:200px;")
-                        input_bark_gui_spk = ui.input(label='说话人', placeholder='选择的说话人，webui的voice中对应的说话人', value=config.get("bark_gui", "spk")).style("width:200px;")
-
-                        input_bark_gui_generation_temperature = ui.input(label='生成温度', placeholder='控制合成过程中生成语音的随机性。较高的值（接近1.0）会使输出更加随机，而较低的值（接近0.0）则使其更加确定性和集中。', value=config.get("bark_gui", "generation_temperature")).style("width:200px;")
-                        input_bark_gui_waveform_temperature = ui.input(label='波形温度', placeholder='类似于generation_temperature，但该参数专门控制从语音模型生成的波形的随机性', value=config.get("bark_gui", "waveform_temperature")).style("width:200px;")
-                    with ui.row():
-                        input_bark_gui_end_of_sentence_probability = ui.input(label='句末概率', placeholder='该参数确定在句子结尾添加停顿或间隔的可能性。较高的值会增加停顿的几率，而较低的值则会减少。', value=config.get("bark_gui", "end_of_sentence_probability")).style("width:200px;")
-                        switch_bark_gui_quick_generation = ui.switch('快速生成', value=config.get("bark_gui", "quick_generation")).style(switch_internal_css)
-                        input_bark_gui_seed = ui.input(label='随机种子', placeholder='用于随机数生成器的种子值。使用特定的种子确保相同的输入文本每次生成的语音输出都是相同的。值为-1表示将使用随机种子。', value=config.get("bark_gui", "seed")).style("width:200px;")
-                        input_bark_gui_batch_count = ui.input(label='批量数', placeholder='指定一次批量合成的句子或话语数量。将其设置为1意味着逐句合成一次。', value=config.get("bark_gui", "batch_count")).style("width:200px;")
-            
             if config.get("webui", "show_card", "tts", "vall_e_x"):  
                 with ui.card().style(card_css):
                     ui.label("vall_e_x")
@@ -7305,7 +7276,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_bert_vits2 = ui.switch('Bert VITS2', value=config.get("webui", "show_card", "tts", "bert_vits2")).style(switch_internal_css)
                         switch_webui_show_card_tts_vits_fast = ui.switch('VITS Fast', value=config.get("webui", "show_card", "tts", "vits_fast")).style(switch_internal_css)
                         switch_webui_show_card_tts_elevenlabs = ui.switch('elevenlabs', value=config.get("webui", "show_card", "tts", "elevenlabs")).style(switch_internal_css)
-                        switch_webui_show_card_tts_bark_gui = ui.switch('bark_gui', value=config.get("webui", "show_card", "tts", "bark_gui")).style(switch_internal_css)
                         switch_webui_show_card_tts_vall_e_x = ui.switch('vall_e_x', value=config.get("webui", "show_card", "tts", "vall_e_x")).style(switch_internal_css)
                         switch_webui_show_card_tts_openai_tts = ui.switch('openai_tts', value=config.get("webui", "show_card", "tts", "openai_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_reecho_ai = ui.switch('reecho_ai', value=config.get("webui", "show_card", "tts", "reecho_ai")).style(switch_internal_css)
@@ -7370,7 +7340,7 @@ def goto_func_page():
                 ui.label('介绍').style("font-size:24px;")
                 ui.label('AI Vtuber 是一款结合了最先进技术的虚拟AI主播。它的核心是一系列高效的人工智能模型，包括 ChatterBot、GPT、Claude、langchain、chatglm、text-generation-webui、讯飞星火、智谱AI、谷歌Bard、文心一言 和 通义星尘。这些模型既可以在本地运行，也可以通过云端服务提供支持。')
                 ui.label('AI Vtuber 的外观由 Live2D、Vtube Studio、xuniren 和 UE5 结合 Audio2Face 技术打造，为用户提供了一个生动、互动的虚拟形象。这使得 AI Vtuber 能够在各大直播平台，如 Bilibili、抖音、快手、斗鱼、YouTube 和 Twitch，进行实时互动直播。当然，它也可以在本地环境中与您进行个性化对话。')
-                ui.label('为了使交流更加自然，AI Vtuber 使用了先进的自然语言处理技术，结合文本转语音系统，如 Edge-TTS、VITS-Fast、elevenlabs、bark-gui、VALL-E-X、睿声AI、genshinvoice.top、 tts.ai-lab.top和GPT-SoVITS。这不仅让它能够生成流畅的回答，还可以通过 so-vits-svc 和 DDSP-SVC 实现声音的变化，以适应不同的场景和角色。')
+                ui.label('为了使交流更加自然，AI Vtuber 使用了先进的自然语言处理技术，结合文本转语音系统，如 Edge-TTS、VITS-Fast、elevenlabs、VALL-E-X、睿声AI、genshinvoice.top、 tts.ai-lab.top和GPT-SoVITS。这不仅让它能够生成流畅的回答，还可以通过 so-vits-svc 和 DDSP-SVC 实现声音的变化，以适应不同的场景和角色。')
                 ui.label('此外，AI Vtuber 还能够通过特定指令与 Stable Diffusion 协作，展示画作。用户还可以自定义文案，让 AI Vtuber 循环播放，以满足不同场合的需求。')
             with ui.card().style(card_css):
                 ui.label('许可证').style("font-size:24px;")

@@ -1001,21 +1001,7 @@ class Audio:
                 voice_tmp_path = await self.my_tts.genshinvoice_top_api(message["content"])
             elif message["tts_type"] == "tts_ai_lab_top":
                 voice_tmp_path = await self.my_tts.tts_ai_lab_top_api(message["content"])
-            elif message["tts_type"] == "bark_gui":
-                data = {
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "spk": message["data"]["spk"],
-                    "generation_temperature": message["data"]["generation_temperature"],
-                    "waveform_temperature": message["data"]["waveform_temperature"],
-                    "end_of_sentence_probability": message["data"]["end_of_sentence_probability"],
-                    "quick_generation": message["data"]["quick_generation"],
-                    "seed": message["data"]["seed"],
-                    "batch_count": message["data"]["batch_count"],
-                    "content": message["content"]
-                }
-
-                # 调用接口合成语音
-                voice_tmp_path = self.my_tts.bark_gui_api(data)
+            
             elif message["tts_type"] == "vall_e_x":
                 data = {
                     "api_ip_port": message["data"]["api_ip_port"],
@@ -1883,7 +1869,6 @@ class Audio:
 
         vits = self.config.get("vits")
         vits_fast = self.config.get("vits_fast")
-        bark_gui = self.config.get("bark_gui")
         vall_e_x = self.config.get("vall_e_x")
         openai_tts = self.config.get("openai_tts")
     
@@ -2010,21 +1995,7 @@ class Audio:
             except Exception as e:
                 logger.error(traceback.format_exc())
                 return
-        elif audio_synthesis_type == "bark_gui":
-            data = {
-                "api_ip_port": bark_gui["api_ip_port"],
-                "spk": bark_gui["spk"],
-                "generation_temperature": bark_gui["generation_temperature"],
-                "waveform_temperature": bark_gui["waveform_temperature"],
-                "end_of_sentence_probability": bark_gui["end_of_sentence_probability"],
-                "quick_generation": bark_gui["quick_generation"],
-                "seed": bark_gui["seed"],
-                "batch_count": bark_gui["batch_count"],
-                "content": content
-            }
 
-            # 调用接口合成语音
-            voice_tmp_path = self.my_tts.bark_gui_api(data)
         elif audio_synthesis_type == "vall_e_x":
             data = {
                 "api_ip_port": vall_e_x["api_ip_port"],
