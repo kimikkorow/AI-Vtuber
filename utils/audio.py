@@ -997,8 +997,6 @@ class Audio:
                 logger.info(f"elevenlabs合成内容：【{message['content']}】")
 
                 return
-            elif message["tts_type"] == "genshinvoice_top":
-                voice_tmp_path = await self.my_tts.genshinvoice_top_api(message["content"])
             elif message["tts_type"] == "tts_ai_lab_top":
                 voice_tmp_path = await self.my_tts.tts_ai_lab_top_api(message["content"])
             
@@ -1982,11 +1980,6 @@ class Audio:
             except Exception as e:
                 logger.error(traceback.format_exc())
                 return
-
-        
-        elif audio_synthesis_type == "genshinvoice_top":
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.genshinvoice_top_api(content)
 
         elif audio_synthesis_type == "tts_ai_lab_top":
             # 调用接口合成语音

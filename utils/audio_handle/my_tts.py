@@ -365,33 +365,6 @@ class MY_TTS:
             return None
     
 
-    # 请求genshinvoice.top的api
-    async def genshinvoice_top_api(self, text):
-        url = 'https://genshinvoice.top/api'
-
-        genshinvoice_top = self.config.get("genshinvoice_top")
-
-        params = {
-            'speaker': genshinvoice_top['speaker'],
-            'text': text,
-            'format': genshinvoice_top['format'],
-            'length': genshinvoice_top['length'],
-            'noise': genshinvoice_top['noise'],
-            'noisew': genshinvoice_top['noisew'],
-            'language': genshinvoice_top['language']
-        }
-
-        try:
-            return await self.download_audio("genshinvoice_top", url, self.timeout, "get", params)
-        except aiohttp.ClientError as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'genshinvoice.top请求失败: {e}')
-        except Exception as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'genshinvoice.top未知错误: {e}')
-        
-        return None
-
     # 请求https://tts.ai-hobbyist.org/的api
     async def tts_ai_lab_top_api(self, text):
         url = 'https://tirs.ai-lab.top/api/ex/vits'
