@@ -365,50 +365,6 @@ class MY_TTS:
             return None
     
 
-    # 请求https://tts.ai-hobbyist.org/的api
-    async def tts_ai_lab_top_api(self, text):
-        url = 'https://tirs.ai-lab.top/api/ex/vits'
-
-        tts_ai_lab_top = self.config.get("tts_ai_lab_top")
-
-        params = {
-            "token": tts_ai_lab_top['token'],
-            "appid": tts_ai_lab_top['appid'],
-            'lang': tts_ai_lab_top['lang'],
-            'speaker': tts_ai_lab_top['speaker'],
-            'text': text,
-            'sdp_ratio': float(tts_ai_lab_top['sdp_ratio']),
-            'length': float(tts_ai_lab_top['length']),
-            'noise': float(tts_ai_lab_top['noise']),
-            'noisew': float(tts_ai_lab_top['noisew'])
-        }
-
-        logger.debug(f"params={params}")
-
-        
-
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, json=params, timeout=self.timeout) as response:
-                    ret = await response.json()
-                    logger.debug(ret)
-
-                    url = ret["audio"]
-
-                    if url is None:
-                        logger.error(f'tts.ai-lab.top合成失败，错误信息: {ret["message"]}')
-                        return None
-
-                    return await self.download_audio("tts_ai_lab_top", url, self.timeout, "get", None)
-        except aiohttp.ClientError as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'tts.ai-lab.top请求失败: {e}')
-        except Exception as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'tts.ai-lab.top未知错误: {e}')
-        
-        return None
-
     # 请求OpenAI_TTS的api
     def openai_tts_api(self, data):
         try:

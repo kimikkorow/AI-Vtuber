@@ -666,16 +666,6 @@
     "voice": "Rachel",
     "model": "eleven_monolingual_v1"
   },
-  "tts_ai_lab_top": {
-    "appid": "",
-    "token": "",
-    "speaker": "白露",
-    "sdp_ratio": "0.2",
-    "noise": "0.5",
-    "noisew": "0.9",
-    "length": "1.0",
-    "lang": "zh"
-  },
   "openai_tts": {
     "type": "api",
     "api_ip_port": "https://api.openai.com/v1",
@@ -1945,7 +1935,6 @@
         "bert_vits2": true,
         "vits_fast": true,
         "elevenlabs": true,
-        "tts_ai_lab_top": true,
         "openai_tts": true,
         "reecho_ai": true,
         "gradio_tts": true,
