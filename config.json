@@ -381,13 +381,6 @@
     "local_max_query": 3,
     "local_vector_embedding_model": "sebastian-hofstaetter/distilbert-dot-tas_b-b256-msmarco"
   },
-  "langchain_chatglm": {
-    "api_ip_port": "http://127.0.0.1:7861",
-    "chat_type": "模型",
-    "knowledge_base_id": "ikaros",
-    "history_enable": true,
-    "history_max_len": 500
-  },
   "langchain_chatchat": {
     "api_ip_port": "http://127.0.0.1:7861",
     "chat_type": "模型",
@@ -1993,7 +1986,6 @@
         "claude": true,
         "zhipu": true,
         "chat_with_file": true,
-        "langchain_chatglm": true,
         "langchain_chatchat": true,
         "chatterbot": true,
         "text_generation_webui": true,

@@ -14,7 +14,6 @@ from utils.gpt_model.claude import Claude
 from utils.gpt_model.claude2 import Claude2
 from utils.gpt_model.text_generation_webui import TEXT_GENERATION_WEBUI
 from utils.gpt_model.sparkdesk import SPARKDESK
-from utils.gpt_model.langchain_chatglm import Langchain_ChatGLM
 from utils.gpt_model.langchain_chatchat import Langchain_ChatChat
 from utils.gpt_model.zhipu import Zhipu
 from utils.gpt_model.bard import Bard_api
@@ -44,7 +43,6 @@ class GPT_Model:
             "claude2": Claude2,
             "text_generation_webui": TEXT_GENERATION_WEBUI,
             "sparkdesk": SPARKDESK,
-            "langchain_chatglm": Langchain_ChatGLM,
             "langchain_chatchat": Langchain_ChatChat,
             "zhipu": Zhipu,
             "bard": Bard_api,

@@ -2316,14 +2316,6 @@ def goto_func_page():
                         "version": (select_sparkdesk_version, 'float'),
                         "assistant_id": (input_sparkdesk_assistant_id, 'str'),
                     }
-                if config.get("webui", "show_card", "llm", "langchain_chatglm"):
-                    config_mapping["langchain_chatglm"] = {
-                        "api_ip_port": (input_langchain_chatglm_api_ip_port, 'str'),
-                        "chat_type": (select_langchain_chatglm_chat_type, 'str'),
-                        "knowledge_base_id": (input_langchain_chatglm_knowledge_base_id, 'str'),
-                        "history_enable": (switch_langchain_chatglm_history_enable, 'bool'),
-                        "history_max_len": (input_langchain_chatglm_history_max_len, 'int'),
-                    }
                 if config.get("webui", "show_card", "llm", "langchain_chatchat"):
                     config_mapping["langchain_chatchat"] = {
                         "api_ip_port": (input_langchain_chatchat_api_ip_port, 'str'),
@@ -3290,7 +3282,6 @@ def goto_func_page():
                                 "claude": (switch_webui_show_card_llm_claude, 'bool'),
                                 "zhipu": (switch_webui_show_card_llm_zhipu, 'bool'),
                                 "chat_with_file": (switch_webui_show_card_llm_chat_with_file, 'bool'),
-                                "langchain_chatglm": (switch_webui_show_card_llm_langchain_chatglm, 'bool'),
                                 "langchain_chatchat": (switch_webui_show_card_llm_langchain_chatchat, 'bool'),
                                 "chatterbot": (switch_webui_show_card_llm_chatterbot, 'bool'),
                                 "text_generation_webui": (switch_webui_show_card_llm_text_generation_webui, 'bool'),
@@ -3493,7 +3484,6 @@ def goto_func_page():
         'chatterbot': 'Chatterbot',
         'text_generation_webui': 'text_generation_webui',
         'sparkdesk': '讯飞星火',
-        'langchain_chatglm': 'langchain_chatglm',
         'langchain_chatchat': 'langchain_chatchat',
         'zhipu': '智谱AI',
         'bard': 'Bard',
@@ -4732,36 +4722,7 @@ def goto_func_page():
                                 value=str(config.get("sparkdesk", "version"))
                             ).style("width:100px") 
                             input_sparkdesk_assistant_id = ui.input(label='助手ID', value=config.get("sparkdesk", "assistant_id"), placeholder='助手创作中心，创建助手后助手API的接口地址最后的助手ID').style("width:100px") 
-                            
-            if config.get("webui", "show_card", "llm", "langchain_chatglm"):  
-                with ui.card().style(card_css):
-                    ui.label("Langchain_ChatGLM")
-                    with ui.row():
-                        input_langchain_chatglm_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='langchain_chatglm的API版本运行后的服务链接（需要完整的URL）', 
-                            value=config.get("langchain_chatglm", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        )
-                        input_langchain_chatglm_api_ip_port.style("width:400px")
-                        lines = ["模型", "知识库", "必应"]
-                        data_json = {}
-                        for line in lines:
-                            data_json[line] = line
-                        select_langchain_chatglm_chat_type = ui.select(
-                            label='类型', 
-                            options=data_json, 
-                            value=config.get("langchain_chatglm", "chat_type")
-                        )
-                    with ui.row():
-                        input_langchain_chatglm_knowledge_base_id = ui.input(label='知识库名称', placeholder='本地存在的知识库名称，日志也有输出知识库列表，可以查看', value=config.get("langchain_chatglm", "knowledge_base_id"))
-                        input_langchain_chatglm_knowledge_base_id.style("width:400px")
-                        switch_langchain_chatglm_history_enable = ui.switch('上下文记忆', value=config.get("langchain_chatglm", "history_enable")).style(switch_internal_css)
-                        input_langchain_chatglm_history_max_len = ui.input(label='最大记忆长度', placeholder='最大记忆的上下文字符数量，不建议设置过大，容易爆显存，自行根据情况配置', value=config.get("langchain_chatglm", "history_max_len"))
-                        input_langchain_chatglm_history_max_len.style("width:400px")
-            
+                 
             if config.get("webui", "show_card", "llm", "langchain_chatchat"):  
                 with ui.card().style(card_css):
                     ui.label("Langchain_ChatChat")
@@ -7455,7 +7416,6 @@ def goto_func_page():
                         switch_webui_show_card_llm_claude = ui.switch('claude', value=config.get("webui", "show_card", "llm", "claude")).style(switch_internal_css)
                         switch_webui_show_card_llm_zhipu = ui.switch('智谱AI', value=config.get("webui", "show_card", "llm", "zhipu")).style(switch_internal_css)
                         switch_webui_show_card_llm_chat_with_file = ui.switch('chat_with_file', value=config.get("webui", "show_card", "llm", "chat_with_file")).style(switch_internal_css)
-                        switch_webui_show_card_llm_langchain_chatglm = ui.switch('langchain_chatglm', value=config.get("webui", "show_card", "llm", "langchain_chatglm")).style(switch_internal_css)
                         switch_webui_show_card_llm_langchain_chatchat = ui.switch('langchain_chatchat', value=config.get("webui", "show_card", "llm", "langchain_chatchat")).style(switch_internal_css)
                         switch_webui_show_card_llm_chatterbot = ui.switch('chatterbot', value=config.get("webui", "show_card", "llm", "chatterbot")).style(switch_internal_css)
                         switch_webui_show_card_llm_text_generation_webui = ui.switch('text_generation_webui', value=config.get("webui", "show_card", "llm", "text_generation_webui")).style(switch_internal_css)

@@ -151,7 +151,6 @@ class My_handle(metaclass=SingletonMeta):
             self.chat_with_file = None
             self.text_generation_webui = None
             self.sparkdesk = None
-            self.langchain_chatglm = None
             self.langchain_chatchat = None
             self.zhipu = None
             self.bard_api = None
@@ -172,7 +171,7 @@ class My_handle(metaclass=SingletonMeta):
             self.image_recognition_model = None
 
             self.chat_type_list = ["chatgpt", "claude", "claude2", "chat_with_file", "text_generation_webui", \
-                    "sparkdesk", "langchain_chatglm", "langchain_chatchat", "zhipu", "bard", "tongyi", \
+                    "sparkdesk",  "langchain_chatchat", "zhipu", "bard", "tongyi", \
                     "tongyixingchen", "my_qianfan", "my_wenxinworkshop", "gemini", "qanything", "koboldcpp", "anythingllm", "gpt4free", \
                     "custom_llm", "llm_tpu", "dify", "volcengine"]
 
@@ -1575,7 +1574,6 @@ class My_handle(metaclass=SingletonMeta):
                     "chat_with_file": lambda: self.chat_with_file.get_model_resp(data["content"]),
                     "text_generation_webui": lambda: self.text_generation_webui.get_resp(data["content"]),
                     "sparkdesk": lambda: self.sparkdesk.get_resp(data["content"]),
-                    "langchain_chatglm": lambda: self.langchain_chatglm.get_resp(data["content"]),
                     "langchain_chatchat": lambda: self.langchain_chatchat.get_resp(data["content"]),
                     "zhipu": lambda: self.zhipu.get_resp(data["content"]),
                     "bard": lambda: self.bard_api.get_resp(data["content"]),
