@@ -684,13 +684,6 @@
     "length": "1.0",
     "lang": "zh"
   },
-  "vall_e_x": {
-    "api_ip_port": "http://127.0.0.1:7860",
-    "language": "auto-detect",
-    "accent": "no-accent",
-    "voice_preset": "ikaros",
-    "voice_preset_file_path": "D:\\GitHub_pro\\AI-Vtuber\\tests\\test_VALL-E-X\\ikaros.npz"
-  },
   "openai_tts": {
     "type": "api",
     "api_ip_port": "https://api.openai.com/v1",
@@ -1962,7 +1955,6 @@
         "elevenlabs": true,
         "genshinvoice_top": true,
         "tts_ai_lab_top": true,
-        "vall_e_x": true,
         "openai_tts": true,
         "reecho_ai": true,
         "gradio_tts": true,

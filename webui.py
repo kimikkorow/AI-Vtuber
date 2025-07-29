@@ -2593,14 +2593,6 @@ def goto_func_page():
                         "model": (input_elevenlabs_model, 'str'),
                     }
                 
-                if config.get("webui", "show_card", "tts", "vall_e_x"):
-                    config_mapping["vall_e_x"] = {
-                        "api_ip_port": (input_vall_e_x_api_ip_port, 'str'),
-                        "language": (select_vall_e_x_language, 'str'),
-                        "accent": (select_vall_e_x_accent, 'str'),
-                        "voice_preset": (input_vall_e_x_voice_preset, 'str'),
-                        "voice_preset_file_path": (input_vall_e_x_voice_preset_file_path, 'str'),
-                    }
                 if config.get("webui", "show_card", "tts", "openai_tts"):
                     config_mapping["openai_tts"] = {
                         "type": (select_openai_tts_type, 'str'),
@@ -3269,7 +3261,6 @@ def goto_func_page():
                                 "bert_vits2": (switch_webui_show_card_tts_bert_vits2, 'bool'),
                                 "vits_fast": (switch_webui_show_card_tts_vits_fast, 'bool'),
                                 "elevenlabs": (switch_webui_show_card_tts_elevenlabs, 'bool'),
-                                "vall_e_x": (switch_webui_show_card_tts_vall_e_x, 'bool'),
                                 "openai_tts": (switch_webui_show_card_tts_openai_tts, 'bool'),
                                 "reecho_ai": (switch_webui_show_card_tts_reecho_ai, 'bool'),
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
@@ -3416,7 +3407,6 @@ def goto_func_page():
         'bert_vits2': 'bert_vits2',
         'vits_fast': 'VITS-Fast', 
         'elevenlabs': 'elevenlabs',
-        'vall_e_x': 'VALL-E-X',
         'openai_tts': 'OpenAI TTS',
         'reecho_ai': '睿声AI',
         'gradio_tts': 'Gradio',
@@ -5488,33 +5478,6 @@ def goto_func_page():
                         input_elevenlabs_model = ui.input(label='模型', placeholder='选择的模型', value=config.get("elevenlabs", "model"))
             
             
-            if config.get("webui", "show_card", "tts", "vall_e_x"):  
-                with ui.card().style(card_css):
-                    ui.label("vall_e_x")
-                    with ui.row():
-                        input_vall_e_x_api_ip_port = ui.input(
-                            label='API地址', 
-                            placeholder='VALL-E-X启动后监听的ip端口地址', 
-                            value=config.get("vall_e_x", "api_ip_port"),
-                            validation={
-                                '请输入正确格式的URL': lambda value: common.is_url_check(value),
-                            }
-                        ).style("width:200px;")
-                        select_vall_e_x_language = ui.select(
-                            label='language', 
-                            options={'auto-detect':'auto-detect', 'English':'English', '中文':'中文', '日本語':'日本語', 'Mix':'Mix'}, 
-                            value=config.get("vall_e_x", "language")
-                        ).style("width:200px;")
-
-                        select_vall_e_x_accent = ui.select(
-                            label='accent', 
-                            options={'no-accent':'no-accent', 'English':'English', '中文':'中文', '日本語':'日本語'}, 
-                            value=config.get("vall_e_x", "accent")
-                        ).style("width:200px;")
-
-                        input_vall_e_x_voice_preset = ui.input(label='voice preset', placeholder='VALL-E-X说话人预设名（Prompt name）', value=config.get("vall_e_x", "voice_preset")).style("width:300px;")
-                        input_vall_e_x_voice_preset_file_path = ui.input(label='voice_preset_file_path', placeholder='VALL-E-X说话人预设文件路径（npz）', value=config.get("vall_e_x", "voice_preset_file_path")).style("width:300px;")
-            
             if config.get("webui", "show_card", "tts", "openai_tts"): 
                 with ui.card().style(card_css):
                     ui.label("OpenAI TTS")
@@ -7276,7 +7239,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_bert_vits2 = ui.switch('Bert VITS2', value=config.get("webui", "show_card", "tts", "bert_vits2")).style(switch_internal_css)
                         switch_webui_show_card_tts_vits_fast = ui.switch('VITS Fast', value=config.get("webui", "show_card", "tts", "vits_fast")).style(switch_internal_css)
                         switch_webui_show_card_tts_elevenlabs = ui.switch('elevenlabs', value=config.get("webui", "show_card", "tts", "elevenlabs")).style(switch_internal_css)
-                        switch_webui_show_card_tts_vall_e_x = ui.switch('vall_e_x', value=config.get("webui", "show_card", "tts", "vall_e_x")).style(switch_internal_css)
                         switch_webui_show_card_tts_openai_tts = ui.switch('openai_tts', value=config.get("webui", "show_card", "tts", "openai_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_reecho_ai = ui.switch('reecho_ai', value=config.get("webui", "show_card", "tts", "reecho_ai")).style(switch_internal_css)
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)

@@ -1002,18 +1002,6 @@ class Audio:
             elif message["tts_type"] == "tts_ai_lab_top":
                 voice_tmp_path = await self.my_tts.tts_ai_lab_top_api(message["content"])
             
-            elif message["tts_type"] == "vall_e_x":
-                data = {
-                    "api_ip_port": message["data"]["api_ip_port"],
-                    "language": message["data"]["language"],
-                    "accent": message["data"]["accent"],
-                    "voice_preset": message["data"]["voice_preset"],
-                    "voice_preset_file_path": message["data"]["voice_preset_file_path"],
-                    "content": message["content"]
-                }
-
-                # 调用接口合成语音
-                voice_tmp_path = self.my_tts.vall_e_x_api(data)
             elif message["tts_type"] == "openai_tts":
                 data = {
                     "type": message["data"]["type"],
@@ -1869,7 +1857,6 @@ class Audio:
 
         vits = self.config.get("vits")
         vits_fast = self.config.get("vits_fast")
-        vall_e_x = self.config.get("vall_e_x")
         openai_tts = self.config.get("openai_tts")
     
         if audio_synthesis_type == "vits":
@@ -1996,18 +1983,7 @@ class Audio:
                 logger.error(traceback.format_exc())
                 return
 
-        elif audio_synthesis_type == "vall_e_x":
-            data = {
-                "api_ip_port": vall_e_x["api_ip_port"],
-                "language": vall_e_x["language"],
-                "accent": vall_e_x["accent"],
-                "voice_preset": vall_e_x["voice_preset"],
-                "voice_preset_file_path":vall_e_x["voice_preset_file_path"],
-                "content": content
-            }
-
-            # 调用接口合成语音
-            voice_tmp_path = self.my_tts.vall_e_x_api(data)
+        
         elif audio_synthesis_type == "genshinvoice_top":
             # 调用接口合成语音
             voice_tmp_path = await self.my_tts.genshinvoice_top_api(content)

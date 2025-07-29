@@ -365,28 +365,6 @@ class MY_TTS:
             return None
     
 
-    # 请求VALL-E-X的api
-    def vall_e_x_api(self, data):
-        try:
-            client = Client(data["api_ip_port"])
-            result = client.predict(
-				data["content"],	# str in 'Text' Textbox component
-				data["language"],	# str (Option from: ['auto-detect', 'English', '中文', '日本語', 'Mix']) in 'language' Dropdown component
-				data["accent"],	# str (Option from: ['no-accent', 'English', '中文', '日本語']) in 'accent' Dropdown component
-				data["voice_preset"],	# str (Option from: ['astraea', 'cafe', 'dingzhen', 'esta', 'ikaros', 'MakiseKurisu', 'mikako', 'nymph', 'rosalia', 'seel', 'sohara', 'sukata', 'tomoki', 'tomoko', 'yaesakura', '早见沙织', '神里绫华-日语']) in 'Voice preset' Dropdown component
-				data["voice_preset_file_path"],	# str (filepath or URL to file) in 'parameter_46' File component
-				fn_index=5
-            )
-
-            new_file_path = self.common.move_file(result[1], os.path.join(self.audio_out_path, 'vall_e_x_' + self.common.get_bj_time(4)), 'vall_e_x_' + self.common.get_bj_time(4))
-
-            return new_file_path
-        except Exception as e:
-            logger.error(traceback.format_exc())
-            logger.error(f'vall_e_x_api请求失败，请检查您的bark_gui是否启动/配置是否正确，报错内容: {e}')
-            return None
-
-
     # 请求genshinvoice.top的api
     async def genshinvoice_top_api(self, text):
         url = 'https://genshinvoice.top/api'
