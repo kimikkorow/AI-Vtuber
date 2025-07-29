@@ -2601,18 +2601,7 @@ def goto_func_page():
                         "voice": (select_openai_tts_voice, 'str'),
                         "api_key": (input_openai_tts_api_key, 'str'),
                     }
-                if config.get("webui", "show_card", "tts", "reecho_ai"):
-                    config_mapping["reecho_ai"] = {
-                        "Authorization": (input_reecho_ai_Authorization, 'str'),
-                        "model": (input_reecho_ai_model, 'str'),
-                        "voiceId": (input_reecho_ai_voiceId, 'str'),
-                        "randomness": (number_reecho_ai_randomness, 'int'),
-                        "stability_boost": (number_reecho_ai_stability_boost, 'int'),
-                        "promptId": (input_reecho_ai_promptId, 'str'),
-                        "probability_optimization": (number_reecho_ai_probability_optimization, 'int'),
-                        "break_clone": (switch_reecho_ai_break_clone, 'bool'),
-                        "flash": (switch_reecho_ai_flash, 'bool'),
-                    }
+                
                 if config.get("webui", "show_card", "tts", "gradio_tts"):
                     config_mapping["gradio_tts"] = {
                         "request_parameters": (textarea_gradio_tts_request_parameters, 'str'),
@@ -3262,7 +3251,6 @@ def goto_func_page():
                                 "vits_fast": (switch_webui_show_card_tts_vits_fast, 'bool'),
                                 "elevenlabs": (switch_webui_show_card_tts_elevenlabs, 'bool'),
                                 "openai_tts": (switch_webui_show_card_tts_openai_tts, 'bool'),
-                                "reecho_ai": (switch_webui_show_card_tts_reecho_ai, 'bool'),
                                 "gradio_tts": (switch_webui_show_card_tts_gradio_tts, 'bool'),
                                 "gpt_sovits": (switch_webui_show_card_tts_gpt_sovits, 'bool'),
                                 "clone_voice": (switch_webui_show_card_tts_clone_voice, 'bool'),
@@ -3408,7 +3396,6 @@ def goto_func_page():
         'vits_fast': 'VITS-Fast', 
         'elevenlabs': 'elevenlabs',
         'openai_tts': 'OpenAI TTS',
-        'reecho_ai': '睿声AI',
         'gradio_tts': 'Gradio',
         'gpt_sovits': 'GPT_SoVITS',
         'clone_voice': 'clone-voice',
@@ -5507,22 +5494,7 @@ def goto_func_page():
                             value=config.get("openai_tts", "voice")
                         ).style("width:200px;")
                         input_openai_tts_api_key = ui.input(label='api key', value=config.get("openai_tts", "api_key"), placeholder='OpenAI API KEY').style("width:200px;")
-            
-            if config.get("webui", "show_card", "tts", "reecho_ai"): 
-                with ui.card().style(card_css):
-                    ui.label("睿声AI")
-                    with ui.row():
-                        input_reecho_ai_Authorization = ui.input(label='API Key', value=config.get("reecho_ai", "Authorization"), placeholder='API Key').style("width:200px;")
-                        input_reecho_ai_model = ui.input(label='模型ID', value=config.get("reecho_ai", "model"), placeholder='要使用的模型ID (目前统一为reecho-neural-voice-001)').style("width:200px;")
-                        input_reecho_ai_voiceId = ui.input(label='角色ID', value=config.get("reecho_ai", "voiceId"), placeholder='要使用的角色ID，必须位于账号的角色列表库中，记得展开详情').style("width:300px;")
-                    with ui.row():
-                        number_reecho_ai_randomness = ui.number(label='多样性', value=config.get("reecho_ai", "randomness"), format='%d', min=0, max=100, step=1, placeholder='多样性 (0-100，默认请填写97)').style("width:100px;").tooltip('多样性 (0-100，默认请填写97)')
-                        number_reecho_ai_stability_boost = ui.number(label='稳定性过滤', value=config.get("reecho_ai", "stability_boost"), format='%d', min=0, max=100, step=1, placeholder='稳定性过滤 (0-100，默认请填写40)').style("width:100px;").tooltip('稳定性过滤 (0-100，默认请填写40)')
-                        input_reecho_ai_promptId = ui.input(label='角色风格 ID', value=config.get("reecho_ai", "promptId"), placeholder='角色风格 ID （默认为default)').style("width:200px;").tooltip('角色风格 ID （默认为default)')
-                        number_reecho_ai_probability_optimization = ui.number(label='概率优选', value=config.get("reecho_ai", "probability_optimization"), format='%d', min=0, max=100, step=1, placeholder='概率优选 (0-100，默认请填写99)').style("width:100px;").tooltip('概率优选 (0-100，默认请填写99)')
-                        switch_reecho_ai_break_clone = ui.switch('减弱风格影响', value=config.get("reecho_ai", "break_clone")).style(switch_internal_css).tooltip('减弱风格影响')
-                        switch_reecho_ai_flash = ui.switch('加速模式生成', value=config.get("reecho_ai", "flash")).style(switch_internal_css).tooltip('加速模式生成，仅V2.0的模型支持')
-                       
+                  
             if config.get("webui", "show_card", "tts", "gradio_tts"): 
                 with ui.card().style(card_css):
                     ui.label("Gradio")
@@ -7240,7 +7212,6 @@ def goto_func_page():
                         switch_webui_show_card_tts_vits_fast = ui.switch('VITS Fast', value=config.get("webui", "show_card", "tts", "vits_fast")).style(switch_internal_css)
                         switch_webui_show_card_tts_elevenlabs = ui.switch('elevenlabs', value=config.get("webui", "show_card", "tts", "elevenlabs")).style(switch_internal_css)
                         switch_webui_show_card_tts_openai_tts = ui.switch('openai_tts', value=config.get("webui", "show_card", "tts", "openai_tts")).style(switch_internal_css)
-                        switch_webui_show_card_tts_reecho_ai = ui.switch('reecho_ai', value=config.get("webui", "show_card", "tts", "reecho_ai")).style(switch_internal_css)
                         switch_webui_show_card_tts_gradio_tts = ui.switch('gradio', value=config.get("webui", "show_card", "tts", "gradio_tts")).style(switch_internal_css)
                         switch_webui_show_card_tts_gpt_sovits = ui.switch('gpt_sovits', value=config.get("webui", "show_card", "tts", "gpt_sovits")).style(switch_internal_css)
                         switch_webui_show_card_tts_clone_voice = ui.switch('clone_voice', value=config.get("webui", "show_card", "tts", "clone_voice")).style(switch_internal_css)

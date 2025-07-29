@@ -1010,8 +1010,7 @@ class Audio:
 
                 # 调用接口合成语音
                 voice_tmp_path = self.my_tts.openai_tts_api(data)
-            elif message["tts_type"] == "reecho_ai":
-                voice_tmp_path = await self.my_tts.reecho_ai_api(message["content"])
+            
             elif message["tts_type"] == "gradio_tts":
                 data = {
                     "request_parameters": message["data"]["request_parameters"],
@@ -1992,11 +1991,7 @@ class Audio:
             # 调用接口合成语音
             voice_tmp_path = self.my_tts.openai_tts_api(data)
             
-        elif audio_synthesis_type == "reecho_ai":
-            data = content
-            # 调用接口合成语音
-            voice_tmp_path = await self.my_tts.reecho_ai_api(data)
-
+        
         elif audio_synthesis_type == "gradio_tts":
             data = {
                 "request_parameters": self.config.get("gradio_tts", "request_parameters"),

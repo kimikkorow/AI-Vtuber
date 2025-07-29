@@ -46,7 +46,7 @@ async def fish_speech_api(data):
                 if response.status == 200:
                     content = await response.read()
 
-                    # voice_tmp_path = os.path.join(self.audio_out_path, 'reecho_ai_' + self.common.get_bj_time(4) + '.wav')
+                    # voice_tmp_path = os.path.join(self.audio_out_path, '' + self.common.get_bj_time(4) + '.wav')
                     # file_name = 'fish_speech_' + self.common.get_bj_time(4) + '.wav'
 
                     # voice_tmp_path = self.common.get_new_audio_path(self.audio_out_path, file_name)

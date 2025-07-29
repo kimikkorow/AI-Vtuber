@@ -403,48 +403,6 @@ class MY_TTS:
             logger.error(f'OpenAI_TTS请求失败: {e}')
             return None
 
-    # 请求睿声AI的api
-    async def reecho_ai_api(self, text):
-        url = 'https://v1.reecho.cn/api/tts/simple-generate'
-
-        reecho_ai = self.config.get("reecho_ai")
-        
-        headers = {  
-            "Authorization": f"Bearer {reecho_ai['Authorization']}",  
-            "Content-Type": "application/json"
-        }
-
-        params = {
-            "model": reecho_ai['model'],
-            'randomness': reecho_ai['randomness'],
-            'stability_boost': reecho_ai['stability_boost'],
-            'voiceId': reecho_ai['voiceId'],
-            'text': text,
-            "promptId": reecho_ai['promptId'],
-            "probability_optimization": reecho_ai['probability_optimization'],
-            "break_clone": reecho_ai['break_clone'],
-            "flash": reecho_ai['flash'],
-            "stream": False
-        }
-
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, headers=headers, json=params, timeout=self.timeout) as response:
-                    ret = await response.json()
-                    logger.debug(ret)
-
-                    url = ret["data"]["audio"]
-
-                    return await self.download_audio("reecho.ai", url, self.timeout, "get", None, audio_suffix="mp3")  
-
-        except aiohttp.ClientError as e:
-            logger.error(f'reecho.ai请求失败: {e}')
-        except Exception as e:
-            logger.error(f'reecho.ai未知错误: {e}')
-        
-        return None
-
-
     # 请求gradio的api
     def gradio_tts_api(self, data):
         def get_value_by_index(response, index):
